@@ -17,7 +17,7 @@ export default function Header() {
           transition={{ type: 'spring', stiffness: 400 }}
         >
           <Link href="/" className="text-2xl font-bold">
-            Kko bung!
+            붕마카세
           </Link>
         </motion.div>
         <nav></nav>

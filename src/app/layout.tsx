@@ -3,8 +3,8 @@ import '../styles/globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'Kko bung!',
-  description: 'Kko bung!',
+  title: '붕마카세',
+  description: '붕마카세 Description',
 };
 
 export default function RootLayout({

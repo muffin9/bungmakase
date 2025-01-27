@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+const defaultCoordinates = { lat: 37.49881, lng: 127.0275 };
+
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +26,10 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
       window.kakao.maps.load(() => {
         const container = document.getElementById('static_map');
         const options = {
-          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+          center: new window.kakao.maps.LatLng(
+            defaultCoordinates.lat,
+            defaultCoordinates.lng,
+          ),
           level: 3,
         };
 
