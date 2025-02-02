@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import '../styles/globals.css';
 import { Providers } from './providers';
 import { gmarketSans, OwnglyphPDH } from '@/styles/font';
+import Navigation from '@/components/common/Navigation';
 
 export const metadata: Metadata = {
   title: '붕마카세',
@@ -20,6 +21,7 @@ export default function RootLayout({
       >
         <Providers>
           <section className="w-full h-screen xs:w-[375px]">{children}</section>
+          <Navigation />
         </Providers>
       </body>
     </html>
