@@ -60,6 +60,10 @@ export default {
       screens: {
         xs: '375px', // 375px 기준의 브레이크포인트 추가
       },
+      fontFamily: {
+        gmarket: 'var(--font-gmarket)',
+        OwnglyphPDH: 'var(--font-OwnglyphPDH)',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
