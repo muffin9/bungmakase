@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className="flex justify-center">
         <Providers>
-          <section className="w-[375px] h-screen">{children}</section>
+          <section className="w-full h-screen xs:w-[375px]">{children}</section>
         </Providers>
       </body>
     </html>
