@@ -9,7 +9,7 @@ const Navigation = () => {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 flex justify-around w-full xs:w-[375px] h-[60px] items-center shadow-[0_-1px_1px_rgba(125,125,125,0.25)]">
+    <nav className="fixed bottom-0 flex justify-around w-full xs:w-[375px] h-[60px] items-center shadow-[0_-1px_1px_rgba(125,125,125,0.25)]">
       {navigationMenus.map((menu) => (
         <Link
           key={menu.id}
@@ -22,16 +22,16 @@ const Navigation = () => {
             width={20}
             height={20}
           />
-          <p
+          <h2
             className={`text-[10px] ${
               pathname === menu.url ? 'text-third font-bold' : 'text-[#747474]'
             }`}
           >
             {menu.name}
-          </p>
+          </h2>
         </Link>
       ))}
-    </div>
+    </nav>
   );
 };
 
