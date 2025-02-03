@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Navigation from '@/components/common/Navigation';
-import { shouldShowNavigation } from '@/lib/utils';
+import { shouldShowNavigation } from '@/lib/router';
 
 export function NavigationWrapper() {
   const pathname = usePathname();
