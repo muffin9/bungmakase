@@ -55,6 +55,10 @@ export default {
           '5': 'hsl(var(--chart-5))',
         },
       },
+      backgroundImage: {
+        'yellow-gradient':
+          'linear-gradient(to bottom, #FECE62 0%, #FFFFFF 50%, #FFFFFF 100%)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
