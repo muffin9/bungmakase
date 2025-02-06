@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 interface LogoProps {
   size?: 'xSmall' | 'small' | 'medium' | 'large';
+  type?: 'default' | 'empty';
   className?: string;
 }
 
@@ -12,10 +13,10 @@ const LOGO_SIZES = {
   large: { width: 228, height: 159 },
 } as const;
 
-const Logo = ({ size = 'medium', className }: LogoProps) => {
+const Logo = ({ size = 'medium', type = 'default', className }: LogoProps) => {
   return (
     <Image
-      src={'/images/logo.png'}
+      src={type === 'default' ? `/images/logo.png` : `/images/logo-empty.png`}
       width={LOGO_SIZES[size].width}
       height={LOGO_SIZES[size].height}
       alt="Logo image"
