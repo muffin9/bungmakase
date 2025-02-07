@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 interface LogoProps {
-  size?: 'xSmall' | 'small' | 'medium' | 'large';
+  size?: 'xSmall' | 'small' | 'xMedium' | 'medium' | 'large';
   type?: 'default' | 'empty';
   className?: string;
 }
@@ -9,6 +9,7 @@ interface LogoProps {
 const LOGO_SIZES = {
   xSmall: { width: 38, height: 26 },
   small: { width: 49, height: 34 },
+  xMedium: { width: 78, height: 55 },
   medium: { width: 118, height: 82 },
   large: { width: 228, height: 159 },
 } as const;
