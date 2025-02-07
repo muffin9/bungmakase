@@ -3,6 +3,7 @@
 import Logo from '@/components/common/Logo';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -47,9 +48,6 @@ export default function LoginPage() {
           <Button
             variant="outline"
             className="w-full bg-white hover:bg-gray-50 text-black border-gray-200 h-12 relative"
-            onClick={() =>
-              alert('서비스 준비중입니다... 카카오톡으로 로그인해주세요.')
-            }
           >
             <Image
               src={'/images/svg/email.svg'}
@@ -58,7 +56,9 @@ export default function LoginPage() {
               className="absolute left-4"
               alt="kakao"
             />
-            <span className="flex-1 text-center">이메일로 시작하기</span>
+            <Link href="/login/email">
+              <span className="flex-1 text-center">이메일로 시작하기</span>
+            </Link>
           </Button>
 
           <button
