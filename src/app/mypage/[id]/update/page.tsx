@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { MdPhotoCamera } from 'react-icons/md';
 
-const MypageUpdatePage = () => {
+const MypageDetailUpdatePage = () => {
   const router = useRouter();
 
   return (
@@ -68,4 +68,4 @@ const MypageUpdatePage = () => {
   );
 };
 
-export default MypageUpdatePage;
+export default MypageDetailUpdatePage;
