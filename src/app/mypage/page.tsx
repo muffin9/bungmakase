@@ -3,9 +3,12 @@
 import Logo from '@/components/common/Logo';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const MyPage = () => {
+  const router = useRouter();
+
   return (
     <div className="bg-yellow-gradient h-screen pt-[100px] flex flex-col items-center">
       <div className="w-[89px] h-[89px] relative rounded-full bg-[#F6EEDF] flex justify-center items-center cursor-pointer mb-6">
@@ -35,8 +38,11 @@ const MyPage = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-[10px] w-full px-5">
-        <div className="aspect-square bg-[#ddd] rounded-[10px] cursor-pointer">
-          contents
+        <div
+          className="aspect-square bg-[#ddd] rounded-[10px] cursor-pointer"
+          onClick={() => router.push('/mypage/1')}
+        >
+          click
         </div>
         <div className="aspect-square bg-[#ddd] rounded-[10px] cursor-pointer">
           contents
