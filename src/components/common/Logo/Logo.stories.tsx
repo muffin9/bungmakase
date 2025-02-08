@@ -11,7 +11,7 @@ const meta = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['xSmall', 'small', 'medium', 'large'],
+      options: ['xSmall', 'small', 'xMedium', 'medium', 'large'],
       description: 'Logo size variant',
       table: {
         defaultValue: { summary: 'medium' },
@@ -43,6 +43,10 @@ export const AllSizes: Story = {
       <div className="flex items-center gap-2">
         <Logo size="small" />
         <span className="text-sm text-gray-500">small (49x34)</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Logo size="xMedium" />
+        <span className="text-sm text-gray-500">xMedium (78x55)</span>
       </div>
       <div className="flex items-center gap-2">
         <Logo size="medium" />
