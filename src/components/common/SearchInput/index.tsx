@@ -7,7 +7,12 @@ import { useState, useCallback } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import type React from 'react';
 
-export function SearchInput({ onSearch, ...props }: SearchInputProps) {
+export function SearchInput({
+  onSearch,
+  placeholder,
+  onClick,
+  ...props
+}: SearchInputProps) {
   const [value, setValue] = useState('');
 
   const debouncedSearch = useDebouncedCallback((value: string) => {
@@ -26,10 +31,13 @@ export function SearchInput({ onSearch, ...props }: SearchInputProps) {
   return (
     <BaseInput
       endIcon={
-        value ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />
+        value ? <X className="h-4 w-4" /> : <Search className="h-6 w-6" />
       }
       value={value}
+      placeholder={placeholder}
       onChange={handleChange}
+      onClick={onClick}
+      className="w-[330px] h-[55px] bg-white rounded-[10px] border-[#FFA914] border-[1px]"
       {...props}
     />
   );
