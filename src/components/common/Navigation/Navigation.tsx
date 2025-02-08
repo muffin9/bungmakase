@@ -1,4 +1,5 @@
 'use client';
+import { zIndex } from '@/constants/zIndex';
 import { navigationMenus } from '@/lib/data/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +10,9 @@ const Navigation = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 flex justify-around w-full xs:w-[375px] h-[60px] items-center shadow-[0_-1px_1px_rgba(125,125,125,0.25)]">
+    <nav
+      className={`fixed bottom-0 flex justify-around w-full xs:w-[375px] h-[60px] items-center shadow-[0_-1px_1px_rgba(125,125,125,0.25)] bg-white z-${zIndex.navigation}`}
+    >
       {navigationMenus.map((menu) => (
         <Link
           key={menu.id}
