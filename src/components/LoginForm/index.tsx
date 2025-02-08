@@ -1,15 +1,15 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BaseInput } from '@/components/common/BaseInput';
 import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-react';
 import * as z from 'zod';
 import { Eye, EyeOff } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSignUpStore } from '@/store/useSignUpStore';
 
 const formSchema = z
   .object({
@@ -32,32 +32,10 @@ const formSchema = z
     path: ['confirmPassword'],
   });
 
-type FormData = z.infer<typeof formSchema>;
-
-interface SignUpResponse {
-  success: boolean;
-  message: string;
-}
-
-async function signUp(data: FormData): Promise<SignUpResponse> {
-  const response = await fetch('/api/auth/signup', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: data.email,
-      password: data.password,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || '회원가입에 실패했습니다');
-  }
-
-  return response.json();
-}
+export type FormData = z.infer<typeof formSchema>;
 
 export function LoginForm() {
+  const { setLoginData } = useSignUpStore();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -65,9 +43,8 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, dirtyFields },
+    formState: { errors, dirtyFields, isValid },
     watch,
-    reset,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
@@ -108,26 +85,21 @@ export function LoginForm() {
     return '';
   };
 
-  const mutation = useMutation({
-    mutationFn: signUp,
-    onSuccess: (data) => {
-      // TODO: Toast Message
-      reset();
-      router.push('/login/success');
-    },
-    onError: (error: Error) => {
-      // TODO: Toast Message
-    },
-  });
+  // 모든 필드가 입력되었는지 확인
+  const watchedValues = watch(['email', 'password', 'confirmPassword']);
+  const isAllFieldsFilled = watchedValues.every((value) => value);
+
+  // 버튼 활성화 조건: 모든 필드가 입력되고, 에러가 없으며, 폼이 유효한 상태
+  const isButtonEnabled =
+    isAllFieldsFilled && isValid && Object.keys(errors).length === 0;
 
   const onSubmit = handleSubmit((data) => {
-    mutation.mutate(data);
+    setLoginData(data);
+    router.push('/signup/profile');
   });
 
-  const isLoading = isSubmitting || mutation.isPending;
-
   return (
-    <form className="flex flex-col gap-6 mt-8" onSubmit={onSubmit} noValidate>
+    <form className="flex flex-col gap-6 mt-8" onSubmit={onSubmit}>
       <BaseInput
         id="email"
         type="email"
@@ -144,7 +116,6 @@ export function LoginForm() {
             </span>
           </div>
         }
-        disabled={isLoading}
       />
 
       <BaseInput
@@ -177,7 +148,6 @@ export function LoginForm() {
             </span>
           </div>
         }
-        disabled={isLoading}
       />
 
       <BaseInput
@@ -210,11 +180,10 @@ export function LoginForm() {
             </span>
           </div>
         }
-        disabled={isLoading}
       />
 
-      <Button type="submit" className="mt-20" disabled={isLoading}>
-        {isLoading ? '처리중...' : '완료'}
+      <Button type="submit" className="mt-20" disabled={!isButtonEnabled}>
+        이동
       </Button>
     </form>
   );
