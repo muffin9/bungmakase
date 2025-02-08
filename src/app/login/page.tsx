@@ -14,7 +14,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-screen bg-yellow-gradient px-4 py-8">
+    <div className="h-screen bg-yellow-gradient px-6 py-8">
       <div className="h-full flex flex-col items-center justify-between">
         <header className="text-center">
           <p className="text-third text-sm">나만의 붕어빵 아카라이브</p>
@@ -56,7 +56,7 @@ export default function LoginPage() {
               className="absolute left-4"
               alt="kakao"
             />
-            <Link href="/login/email">
+            <Link href="/signup/email">
               <span className="flex-1 text-center">이메일로 시작하기</span>
             </Link>
           </Button>
