@@ -11,6 +11,7 @@ export function SearchInput({
   onSearch,
   placeholder,
   onClick,
+  loading,
   ...props
 }: SearchInputProps) {
   const [value, setValue] = useState('');
@@ -29,16 +30,23 @@ export function SearchInput({
   );
 
   return (
-    <BaseInput
-      endIcon={
-        value ? <X className="h-4 w-4" /> : <Search className="h-6 w-6" />
-      }
-      value={value}
-      placeholder={placeholder}
-      onChange={handleChange}
-      onClick={onClick}
-      className="w-[330px] h-[55px] bg-white rounded-[10px] border-[#FFA914] border-[1px]"
-      {...props}
-    />
+    <div className="relative">
+      <BaseInput
+        endIcon={
+          value ? <X className="h-4 w-4" /> : <Search className="h-6 w-6" />
+        }
+        value={value}
+        placeholder={placeholder}
+        onChange={handleChange}
+        onClick={onClick}
+        className="w-[330px] h-[55px] bg-white rounded-[10px] border-[#FFA914] border-[1px]"
+        {...props}
+      />
+      {loading && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          <span className="animate-spin">⌛</span>
+        </div>
+      )}
+    </div>
   );
 }

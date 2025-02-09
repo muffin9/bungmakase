@@ -1,3 +1,4 @@
+import { zIndex } from '@/constants/zIndex';
 import Image from 'next/image';
 
 interface ReBoundButtonProps {
@@ -14,7 +15,7 @@ const ReBoundButton = ({ onClickReBound, position }: ReBoundButtonProps) => {
   const { top, right, bottom, left } = position;
   return (
     <button
-      className={`absolute ${right} ${top} ${bottom} ${left} z-[1000]`}
+      className={`absolute ${right} ${top} ${bottom} ${left} z-${zIndex.reboundButton}`}
       onClick={onClickReBound}
     >
       <Image

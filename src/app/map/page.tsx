@@ -2,9 +2,8 @@
 
 import KakaoMap from '@/components/common/KakaoMap';
 import { SearchInput } from '@/components/common/SearchInput';
-import { Button } from '@/components/ui/button';
+import FloatingActionButton from '@/components/map/FloatingActionButton';
 import { zIndex } from '@/constants/zIndex';
-import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -24,13 +23,7 @@ export default function MapPage() {
         <footer
           className={`px-3 absolute right-0 bottom-[80px] z-${zIndex.mapFooter}`}
         >
-          <Button
-            className="rounded-full text-sm"
-            onClick={() => console.log('가게후기, 추가하기 Up Bottom Sheet')}
-          >
-            <Plus />
-            추가하기
-          </Button>
+          <FloatingActionButton />
         </footer>
       </KakaoMap>
     </section>
