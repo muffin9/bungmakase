@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { BottomDrawer } from '@/components/common/BototmDrawer';
+import { BottomDrawer } from '@/components/common/BottomDrawer';
 import { useRouter } from 'next/navigation';
 
 const FloatingActionButton = () => {
