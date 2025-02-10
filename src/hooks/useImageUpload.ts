@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export const useImageUpload = () => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [profileImage, setProfileImage] = useState('');
 
   const uploadImage = async (file: File) => {
     try {
@@ -21,5 +23,23 @@ export const useImageUpload = () => {
     }
   };
 
-  return { uploadImage, isUploading };
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = await uploadImage(file);
+      setProfileImage(imageUrl as string);
+    }
+  };
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  return {
+    fileInputRef,
+    profileImage,
+    handleImageChange,
+    handleImageClick,
+    isUploading,
+  };
 };

@@ -11,7 +11,7 @@ import { BaseInput } from '../common/BaseInput';
 import { Info } from 'lucide-react';
 import { Button } from '../ui/button';
 import { z } from 'zod';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -23,9 +23,13 @@ const nicknameSchema = z
   .regex(/^[가-힣a-z]+$/, '닉네임은 한글과 영문 소문자만 입력 가능합니다');
 
 export function ProfileForm() {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [profileImage, setProfileImage] = useState('');
-  const { uploadImage, isUploading } = useImageUpload();
+  const {
+    fileInputRef,
+    profileImage,
+    isUploading,
+    handleImageChange,
+    handleImageClick,
+  } = useImageUpload();
   const [isDuplicate, setIsDuplicate] = useState(false);
 
   const {
@@ -47,18 +51,6 @@ export function ProfileForm() {
       return '사용 가능한 닉네임입니다';
     }
     return '';
-  };
-
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const imageUrl = await uploadImage(file);
-      setProfileImage(imageUrl as string);
-    }
   };
 
   const handleDuplicateCheck = async () => {
