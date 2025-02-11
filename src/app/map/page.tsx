@@ -13,7 +13,7 @@ export default function MapPage() {
     <section>
       <KakaoMap>
         <header
-          className={`px-4 absolute left-[50%] -translate-x-1/2 top-12 z-${zIndex.mapHeader}`}
+          className={`px-4 w-full absolute left-[50%] -translate-x-1/2 top-12 z-${zIndex.mapHeader}`}
         >
           <SearchInput
             placeholder={'가까운 붕어빵 가게를 찾아보세요!'}
