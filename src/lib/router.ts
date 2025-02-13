@@ -7,7 +7,7 @@ export const shouldShowNavigation = (pathname: string): boolean => {
     '/signup/email',
     '/signup/profile',
     '/review/create',
-    '/dogam/create',
+    '/create',
   ];
 
   return !hidePatterns.some(

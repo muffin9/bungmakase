@@ -143,7 +143,7 @@ function BungTypeSelector({
       <Button
         type="button"
         className="mb-2 bg-[#FFEED0] text-[#FFA914] hover:bg-[#FFEED0]/50 transition-colors w-full"
-        onClick={() => router.push('/dogam/create')}
+        onClick={() => router.push('/create')}
       >
         새 붕어빵 제안하기
       </Button>
