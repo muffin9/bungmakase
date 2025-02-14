@@ -58,8 +58,4 @@ export const bungDogamData = [
     id: 'dogam7',
     name: '녹차',
   },
-  {
-    id: 'dogam8',
-    name: '치즈',
-  },
 ];
