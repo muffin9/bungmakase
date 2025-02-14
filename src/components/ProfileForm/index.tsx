@@ -1,15 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import BackButton from '../common/BackButton';
-import Logo from '../common/Logo';
+import BackButton from '@/components/common/BackButton';
+import Logo from '@/components/common/Logo';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
 import { BaseInput } from '../common/BaseInput';
 import { Info } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { z } from 'zod';
 import { useState } from 'react';
 import { useImageUpload } from '@/hooks/useImageUpload';
@@ -23,13 +23,8 @@ const nicknameSchema = z
   .regex(/^[가-힣a-z]+$/, '닉네임은 한글과 영문 소문자만 입력 가능합니다');
 
 export function ProfileForm() {
-  const {
-    fileInputRef,
-    profileImage,
-    isUploading,
-    handleImageChange,
-    handleImageClick,
-  } = useImageUpload();
+  const { fileInputRef, files, isLoading, handleImageChange } =
+    useImageUpload();
   const [isDuplicate, setIsDuplicate] = useState(false);
 
   const {
@@ -67,7 +62,7 @@ export function ProfileForm() {
 
     console.log('Form submitted:', {
       ...data,
-      profileImage,
+      files,
     });
   });
 
@@ -100,13 +95,13 @@ export function ProfileForm() {
             whileTap={{ scale: 0.95 }}
             className={cn(
               'w-[157px] h-[157px] relative rounded-full bg-[#F6EEDF] flex justify-center items-center cursor-pointer mb-6 border border-[#FFD997]',
-              isUploading && 'opacity-50',
+              isLoading && 'opacity-50',
             )}
-            onClick={handleImageClick}
+            onClick={() => fileInputRef.current?.click()}
           >
-            {profileImage ? (
+            {files[0] ? (
               <Image
-                src={profileImage}
+                src={URL.createObjectURL(files[0])}
                 alt="프로필 이미지"
                 fill
                 className="rounded-full object-cover"
@@ -118,7 +113,7 @@ export function ProfileForm() {
               className="rounded-full w-[50px] h-[50px] flex items-center justify-center bg-primary absolute bottom-0 right-0"
               whileHover={{ scale: 1.1 }}
             >
-              {isUploading ? (
+              {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <Image
@@ -135,7 +130,7 @@ export function ProfileForm() {
               accept="image/*"
               className="hidden"
               onChange={handleImageChange}
-              disabled={isUploading}
+              disabled={isLoading}
             />
           </motion.div>
 
