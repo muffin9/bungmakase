@@ -1,4 +1,4 @@
-import { FormData } from '@/components/LoginForm';
+import { FormData } from '@/components/SignupForm';
 
 interface SignUpResponse {
   success: boolean;

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { FormData } from '@/components/LoginForm';
+import { FormData } from '@/components/SignupForm';
 
 interface SignUpState {
   loginData: Partial<FormData>;
