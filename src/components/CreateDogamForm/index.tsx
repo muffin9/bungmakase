@@ -3,11 +3,12 @@
 import { LabeledInfoField } from '../common/LabeledInfoField';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
-import { useDogamStore } from '@/store/useDogamStore';
+import { useState } from 'react';
 
 export function CreateDogamForm() {
   const router = useRouter();
-  const { type, info, setType, setInfo } = useDogamStore();
+  const [type, setType] = useState('');
+  const [info, setInfo] = useState('');
 
   return (
     <div className="h-full flex flex-col items-center justify-center">
@@ -27,7 +28,13 @@ export function CreateDogamForm() {
           onChange={(value) => setInfo(value)}
         />
       </div>
-      <Button className="mt-8" onClick={() => router.back()}>
+      <Button
+        className="mt-8"
+        onClick={() => {
+          // TODO: Create Dogam CALL API
+          router.back();
+        }}
+      >
         등록하기
       </Button>
     </div>
