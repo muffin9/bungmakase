@@ -56,7 +56,7 @@ export default function LoginPage() {
               className="absolute left-4"
               alt="kakao"
             />
-            <Link href="/signup/email">
+            <Link href="/login/email">
               <span className="flex-1 text-center">이메일로 시작하기</span>
             </Link>
           </Button>
