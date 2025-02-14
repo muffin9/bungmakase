@@ -2,8 +2,9 @@ import { useState } from 'react';
 
 export function useReviewForm() {
   const [formData, setFormData] = useState({
-    bungType: '',
+    files: [],
     starRating: 0,
+    bungType: '',
     reviewContent: '',
   });
 

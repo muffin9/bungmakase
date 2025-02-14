@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { BottomDrawer, DrawerClose } from '../common/BottomDrawer';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { LabeledInfoField } from '@/components/common/LabeledInfoField';
-import { useReviewForm } from '@/hooks/useReviewForm';
+import { useReviewStore } from '@/store/useReviewStore';
 import { bungDogamData } from '@/constants/dummy';
 import { useRouter } from 'next/navigation';
+import { X } from 'lucide-react';
 
 interface StarRatingProps {
   rating: number;
@@ -37,46 +38,60 @@ function StarRating({ rating, onRatingChange }: StarRatingProps) {
   );
 }
 
-// TODO: 다중 이미지 업로드 구현 필요.
 interface ImageUploadSectionProps {
-  profileImage: string;
+  files: File[];
   isUploading: boolean;
-  onImageClick: () => void;
   fileInputRef: React.RefObject<HTMLInputElement>;
   onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemove: (index: number) => void;
 }
 
 function ImageUploadSection({
-  profileImage,
+  files,
   isUploading,
-  onImageClick,
   fileInputRef,
   onImageChange,
+  onRemove,
 }: ImageUploadSectionProps) {
   return (
     <div className="w-full flex flex-col items-center mb-8">
-      <div className="w-full h-[150px] flex justify-center items-center border border-[#d6d6d6] rounded-lg">
-        {profileImage ? (
-          <div className="relative w-32 h-32">
+      <div className="w-full min-h-[150px] flex flex-wrap gap-2 justify-center items-center border border-[#d6d6d6] rounded-lg p-4">
+        {files.map((file, index) => (
+          <div key={index} className="relative w-32 h-32">
             <Image
-              src={profileImage}
-              alt="리뷰 이미지"
+              src={URL.createObjectURL(file)}
+              alt={`리뷰 이미지 ${index + 1}`}
               fill
               className="rounded-lg object-cover"
             />
+            <button
+              type="button"
+              onClick={() => onRemove(index)}
+              className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
-        ) : (
-          <AddImageButton onClick={onImageClick} isUploading={isUploading} />
+        ))}
+        {files.length < 5 && (
+          <AddImageButton
+            onClick={() => fileInputRef.current?.click()}
+            isUploading={isUploading}
+          />
         )}
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
+          multiple
           className="hidden"
           onChange={onImageChange}
           disabled={isUploading}
         />
       </div>
+      <p className="text-xs text-muted-foreground mt-2">
+        이미지는 최대 5개까지 업로드할 수 있습니다. ({files.length}/5)
+      </p>
     </div>
   );
 }
@@ -133,7 +148,9 @@ function BungTypeSelector({
         {bungDogamData.map((dogam) => (
           <div
             key={dogam.id}
-            className="p-3 text-sm rounded-full border border-[#d8d8d8] cursor-pointer hover:bg-gray-50 transition-colors"
+            className={`${
+              currentType === dogam.name && 'bg-[#FFA914] text-white'
+            } p-3 text-sm rounded-full border border-[#d8d8d8] cursor-pointer hover:bg-gray-50 transition-colors`}
             onClick={() => onTypeChange(dogam.name)}
           >
             {dogam.name}
@@ -163,48 +180,58 @@ function BungTypeSelector({
 
 export function ReviewForm() {
   const {
-    fileInputRef,
-    profileImage,
-    isUploading,
-    handleImageChange,
-    handleImageClick,
-  } = useImageUpload();
+    starRating,
+    bungType,
+    reviewContent,
+    files,
+    setStarRating,
+    setBungType,
+    setReviewContent,
+    resetReview,
+  } = useReviewStore();
 
-  const { formData, handleChange, handleSubmit } = useReviewForm();
+  const { fileInputRef, handleImageChange, removeImage, isLoading } =
+    useImageUpload();
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // TODO: API 호출
+    console.log({
+      starRating,
+      bungType,
+      reviewContent,
+      files,
+    });
+    resetReview();
+  };
 
   return (
-    <form className="flex flex-col items-center" onSubmit={handleSubmit}>
-      <StarRating
-        rating={formData.starRating}
-        onRatingChange={(rating) => handleChange('starRating', rating)}
-      />
+    <form className="flex flex-col items-center" onSubmit={onSubmit}>
+      <StarRating rating={starRating} onRatingChange={setStarRating} />
 
       <ImageUploadSection
-        profileImage={profileImage}
-        isUploading={isUploading}
-        onImageClick={handleImageClick}
+        files={files}
+        isUploading={isLoading}
         fileInputRef={fileInputRef as React.RefObject<HTMLInputElement>}
         onImageChange={handleImageChange}
+        onRemove={removeImage}
       />
 
-      <BungTypeSelector
-        currentType={formData.bungType}
-        onTypeChange={(type) => handleChange('bungType', type)}
-      />
+      <BungTypeSelector currentType={bungType} onTypeChange={setBungType} />
 
       <textarea
         placeholder="붕어빵 가게에 대한 생생한 후기를 남겨보세요."
         className="w-full h-[170px] px-4 py-2 rounded-lg border border-[#d9d9d9] resize-none text-sm focus:outline-none focus:ring-2 focus:ring-[#FFA914] transition-all"
-        value={formData.reviewContent}
-        onChange={(e) => handleChange('reviewContent', e.target.value)}
+        value={reviewContent}
+        onChange={(e) => setReviewContent(e.target.value)}
       />
 
       <Button
         type="submit"
         className="mt-[50px] w-full transition-colors"
-        disabled={isUploading}
+        disabled={isLoading}
       >
-        {isUploading ? '업로드 중...' : '등록하기'}
+        {isLoading ? '업로드 중...' : '등록하기'}
       </Button>
     </form>
   );
