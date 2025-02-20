@@ -35,3 +35,13 @@ storybook 코드는 ui test를 할 코드와 동일한 위치에 작성
 ### 기능명세서
 
 <img width="991" alt="Image" src="https://github.com/user-attachments/assets/8b3bf594-659a-46ae-b0d6-31144bc5c2a5" />
+
+### API 명세서
+
+[API DOCS](http://211.188.61.117:8080/swagger-ui/index.html)
+
+### 프로젝트 실행 방법
+
+1. 프로젝트 폴더로 이동
+2. `pnpm install` 실행
+3. `pnpm dev` 실행

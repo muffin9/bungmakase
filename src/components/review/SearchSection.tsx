@@ -45,19 +45,14 @@ const item = {
 };
 
 const SearchSection = () => {
-  const {
-    mutate: search,
-    isPending,
-    data,
-    error,
-  } = useMutation({
+  const { mutate: search, isPending } = useMutation({
     mutationFn: searchStores,
     onSuccess: (data) => {
       // 검색 결과 처리
       console.log('검색 결과:', data.stores);
       // 상위 컴포넌트로 결과 전달하거나 상태 관리
     },
-    onError: (error: Error) => {
+    onError: () => {
       // toast.error(error.message || '검색 중 오류가 발생했습니다');
     },
   });
