@@ -10,6 +10,9 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSignUpStore } from '@/store/useSignUpStore';
+import { useEmailCheck } from '@/api/email/login';
+import { DialogClose, Modal } from '@/components/ui/modal';
+import { cn } from '@/lib/utils';
 
 const formSchema = z
   .object({
@@ -40,6 +43,12 @@ export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<{
+    title: string;
+    description: string;
+    type: 'success' | 'error';
+  } | null>(null);
 
   const {
     register,
@@ -55,6 +64,8 @@ export function SignupForm() {
   const watchedPassword = watch('password');
   const watchedEmail = watch('email');
   const watchedConfirmPassword = watch('confirmPassword');
+
+  const { mutate: checkEmail, isPending: checkEmailLoading } = useEmailCheck();
 
   // 각 필드의 유효성 상태 확인
   const getEmailCorrect = () => {
@@ -102,10 +113,39 @@ export function SignupForm() {
 
   const handleDuplicateCheck = async () => {
     const isValid = await trigger('email');
+
     if (!isValid) return;
 
-    // TODO: 중복 체크 API 호출
-    setIsDuplicate(true);
+    checkEmail(watchedEmail, {
+      onSuccess: (data) => {
+        if (data.code === 409) {
+          setIsDuplicate(false);
+          setModalContent({
+            title: '이메일 중복 확인',
+            description: '이미 사용 중인 이메일입니다.',
+            type: 'error',
+          });
+        } else if (data.code === 200) {
+          setIsDuplicate(true);
+          setModalContent({
+            title: '이메일 중복 확인',
+            description: '사용 가능한 이메일입니다.',
+            type: 'success',
+          });
+        }
+        setIsModalOpen(true);
+      },
+      onError: (error) => {
+        console.error('Email check error:', error);
+        setModalContent({
+          title: '오류',
+          description: '이메일 중복 확인 중 오류가 발생했습니다.',
+          type: 'error',
+        });
+        setIsDuplicate(false);
+        setIsModalOpen(true);
+      },
+    });
   };
 
   return (
@@ -135,11 +175,41 @@ export function SignupForm() {
         </div>
         <Button
           type="button"
-          onClick={handleDuplicateCheck}
+          disabled={checkEmailLoading}
           className="w-[70px] h-[50px] self-start mt-8 text-xs"
+          onClick={handleDuplicateCheck}
         >
-          중복 확인
+          {checkEmailLoading ? '확인 중...' : '중복 확인'}
         </Button>
+
+        <Modal
+          isOpen={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          titleElement={modalContent?.title}
+        >
+          <div className="flex flex-col items-center gap-6">
+            <p
+              className={cn(
+                'text-center text-lg',
+                modalContent?.type === 'error'
+                  ? 'text-destructive'
+                  : 'text-primary',
+              )}
+            >
+              {modalContent?.description}
+            </p>
+            <DialogClose asChild>
+              <Button
+                className="w-full"
+                variant={
+                  modalContent?.type === 'error' ? 'secondary' : 'default'
+                }
+              >
+                확인
+              </Button>
+            </DialogClose>
+          </div>
+        </Modal>
       </div>
 
       <BaseInput
@@ -209,7 +279,7 @@ export function SignupForm() {
       <Button
         type="submit"
         className="mt-auto"
-        disabled={!isButtonEnabled && !isDuplicate}
+        disabled={!isButtonEnabled || !isDuplicate}
       >
         이동
       </Button>

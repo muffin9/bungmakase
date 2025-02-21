@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { BaseInput } from '../common/BaseInput';
@@ -9,7 +8,7 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-
+import { useEmailLogin } from '@/api/email/login';
 const formSchema = z.object({
   email: z
     .string()
@@ -28,8 +27,8 @@ const formSchema = z.object({
 export type FormData = z.infer<typeof formSchema>;
 
 export function LoginForm() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { mutate: emailLogin, isPending: emailLoginLoading } = useEmailLogin();
 
   const {
     register,
@@ -67,9 +66,8 @@ export function LoginForm() {
   };
 
   const handleLogin = (data: FormData) => {
-    // TODO: 로그인 API 호출
-    console.log(data);
-    router.push('/');
+    // Call Email Login API
+    emailLogin(data);
   };
 
   return (
@@ -116,8 +114,12 @@ export function LoginForm() {
         <Link href="/signup/email" className="underline text-sm">
           회원가입하기
         </Link>
-        <Button type="submit" className="w-full" disabled={!isValid}>
-          완료
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={!isValid || emailLoginLoading}
+        >
+          {emailLoginLoading ? '처리 중...' : '완료'}
         </Button>
       </div>
     </form>

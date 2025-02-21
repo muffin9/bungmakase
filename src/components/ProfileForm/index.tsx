@@ -15,6 +15,11 @@ import { useState } from 'react';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useSignUpStore } from '@/store/useSignUpStore';
+import { useNicknameCheck } from '@/api/user/nickname';
+import { DialogClose, Modal } from '@/components/ui/modal';
+import { useSignUpEmail } from '@/api/email/signup';
+import { useRouter } from 'next/navigation';
 
 const nicknameSchema = z
   .string()
@@ -23,15 +28,28 @@ const nicknameSchema = z
   .regex(/^[가-힣a-z]+$/, '닉네임은 한글과 영문 소문자만 입력 가능합니다');
 
 export function ProfileForm() {
+  const router = useRouter();
   const { fileInputRef, files, isLoading, handleImageChange } =
     useImageUpload();
+  const { loginData } = useSignUpStore();
+
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<{
+    title: string;
+    description: string;
+    type: 'success' | 'error';
+  } | null>(null);
+
+  const { mutate: checkNickname, isPending: checkNicknameLoading } =
+    useNicknameCheck();
+
+  const { mutate: signUpEmail, isPending: signUpLoading } = useSignUpEmail();
 
   const {
     register,
     formState: { errors, dirtyFields },
     watch,
-    handleSubmit,
     trigger,
   } = useForm({
     resolver: zodResolver(nicknameSchema),
@@ -52,19 +70,61 @@ export function ProfileForm() {
     const isValid = await trigger('nickname');
     if (!isValid) return;
 
-    // TODO: 중복 체크 API 호출
-    setIsDuplicate(true);
+    checkNickname(watchedNickname, {
+      onSuccess: (data) => {
+        if (data.code === 409) {
+          setIsDuplicate(false);
+          setModalContent({
+            title: '닉네임 중복 확인',
+            description: '이미 사용 중인 닉네임입니다.',
+            type: 'error',
+          });
+        } else if (data.code === 200) {
+          setIsDuplicate(true);
+          setModalContent({
+            title: '닉네임 중복 확인',
+            description: '사용 가능한 닉네임입니다.',
+            type: 'success',
+          });
+        }
+        setIsModalOpen(true);
+      },
+      onError: (error) => {
+        console.error('Email check error:', error);
+        setModalContent({
+          title: '오류',
+          description: '닉네임 중복 확인 중 오류가 발생했습니다.',
+          type: 'error',
+        });
+        setIsDuplicate(false);
+        setIsModalOpen(true);
+      },
+    });
   };
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = async () => {
     const isValid = await trigger('nickname');
-    if (!isValid) return;
+    if (!isValid || !loginData) return;
 
-    console.log('Form submitted:', {
-      ...data,
-      files,
-    });
-  });
+    signUpEmail(
+      {
+        email: loginData.email!,
+        password: loginData.password!,
+        nickname: watchedNickname,
+        profileImage: files[0],
+      },
+      {
+        onSuccess: (response) => {
+          if (response.code === 201) {
+            router.push('/');
+          }
+        },
+        onError: (error) => {
+          console.error('SignUp error:', error);
+        },
+      },
+    );
+  };
 
   return (
     <motion.section
@@ -88,7 +148,10 @@ export function ProfileForm() {
 
         <form
           className="h-full flex flex-col items-center mt-24"
-          onSubmit={onSubmit}
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
         >
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -154,19 +217,49 @@ export function ProfileForm() {
             </div>
             <Button
               type="button"
+              disabled={checkNicknameLoading}
               onClick={handleDuplicateCheck}
               className="w-[70px] h-[50px] self-start mt-8 text-xs"
             >
-              중복 확인
+              {checkNicknameLoading ? '확인 중...' : '중복 확인'}
             </Button>
+
+            <Modal
+              isOpen={isModalOpen}
+              onOpenChange={setIsModalOpen}
+              titleElement={modalContent?.title}
+            >
+              <div className="flex flex-col items-center gap-6">
+                <p
+                  className={cn(
+                    'text-center text-lg',
+                    modalContent?.type === 'error'
+                      ? 'text-destructive'
+                      : 'text-primary',
+                  )}
+                >
+                  {modalContent?.description}
+                </p>
+                <DialogClose asChild>
+                  <Button
+                    className="w-full"
+                    variant={
+                      modalContent?.type === 'error' ? 'secondary' : 'default'
+                    }
+                  >
+                    확인
+                  </Button>
+                </DialogClose>
+              </div>
+            </Modal>
           </div>
 
           <Button
             type="submit"
             className="mt-auto w-full"
-            disabled={!isDuplicate}
+            disabled={!isDuplicate || signUpLoading}
           >
-            완료
+            {signUpLoading ? '처리 중...' : '완료'}
           </Button>
         </form>
       </div>
