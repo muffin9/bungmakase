@@ -41,12 +41,6 @@ export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<{
-    title: string;
-    description: string;
-    type: 'success' | 'error';
-  } | null>(null);
 
   const {
     register,
@@ -152,35 +146,6 @@ export function SignupForm() {
         >
           {checkEmailLoading ? '확인 중...' : '중복 확인'}
         </Button>
-
-        <Modal
-          isOpen={isModalOpen}
-          onOpenChange={setIsModalOpen}
-          titleElement={modalContent?.title}
-        >
-          <div className="flex flex-col items-center gap-6">
-            <p
-              className={cn(
-                'text-center text-lg',
-                modalContent?.type === 'error'
-                  ? 'text-destructive'
-                  : 'text-primary',
-              )}
-            >
-              {modalContent?.description}
-            </p>
-            <DialogClose asChild>
-              <Button
-                className="w-full"
-                variant={
-                  modalContent?.type === 'error' ? 'secondary' : 'default'
-                }
-              >
-                확인
-              </Button>
-            </DialogClose>
-          </div>
-        </Modal>
       </div>
 
       <BaseInput

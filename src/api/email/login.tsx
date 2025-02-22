@@ -30,6 +30,7 @@ async function checkEmailLogin(
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // 쿠키를 받기 위해 필요
       body: JSON.stringify({ email, password }),
     },
   );

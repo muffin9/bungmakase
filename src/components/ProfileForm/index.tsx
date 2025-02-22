@@ -26,17 +26,17 @@ const nicknameSchema = z
   .regex(/^[가-힣a-z]+$/, '닉네임은 한글과 영문 소문자만 입력 가능합니다');
 
 export function ProfileForm() {
-  const router = useRouter();
   const { fileInputRef, files, isLoading, handleImageChange } =
     useImageUpload();
   const { loginData } = useSignUpStore();
   const [isDuplicate, setIsDuplicate] = useState(false);
 
-  const { mutate: checkNickname } = useNicknameCheck({
-    onDuplicateCheck: (isDuplicate) => setIsDuplicate(!isDuplicate),
-  });
+  const { mutate: checkNickname, isPending: checkNicknameLoading } =
+    useNicknameCheck({
+      onDuplicateCheck: (isDuplicate) => setIsDuplicate(!isDuplicate),
+    });
 
-  const { mutate: signUpEmail } = useSignUpEmail();
+  const { mutate: signUpEmail, isPending: signUpLoading } = useSignUpEmail();
 
   const {
     register,
@@ -174,35 +174,6 @@ export function ProfileForm() {
             >
               {checkNicknameLoading ? '확인 중...' : '중복 확인'}
             </Button>
-
-            <Modal
-              isOpen={isModalOpen}
-              onOpenChange={setIsModalOpen}
-              titleElement={modalContent?.title}
-            >
-              <div className="flex flex-col items-center gap-6">
-                <p
-                  className={cn(
-                    'text-center text-lg',
-                    modalContent?.type === 'error'
-                      ? 'text-destructive'
-                      : 'text-primary',
-                  )}
-                >
-                  {modalContent?.description}
-                </p>
-                <DialogClose asChild>
-                  <Button
-                    className="w-full"
-                    variant={
-                      modalContent?.type === 'error' ? 'secondary' : 'default'
-                    }
-                  >
-                    확인
-                  </Button>
-                </DialogClose>
-              </div>
-            </Modal>
           </div>
 
           <Button
