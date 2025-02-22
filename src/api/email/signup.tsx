@@ -1,4 +1,6 @@
+import { useModalStore } from '@/hooks/useModalStore';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 interface SignUpData {
   email: string;
@@ -41,15 +43,32 @@ async function signUpEmail(data: SignUpData): Promise<SignUpResponse> {
     },
   );
 
-  if (!response.ok) {
-    throw new Error('이메일 회원가입 중 오류가 발생했습니다.');
-  }
-
   return response.json();
 }
 
 export function useSignUpEmail() {
+  const { openModal } = useModalStore();
+  const router = useRouter();
+
   return useMutation({
     mutationFn: signUpEmail,
+    onSuccess: (data) => {
+      if (data.code === 201) {
+        router.push('/');
+      } else if (data.code === 400) {
+        openModal({
+          title: '이메일 회원가입 재확인',
+          description: data.message,
+          type: 'fail',
+        });
+      }
+    },
+    onError: () => {
+      openModal({
+        title: '오류',
+        description: '이메일 회원가입 중 오류가 발생했습니다.',
+        type: 'error',
+      });
+    },
   });
 }

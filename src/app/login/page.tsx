@@ -26,7 +26,7 @@ export default function LoginPage() {
         <Logo size="large" />
 
         {/* Buttons */}
-        <div className="w-full max-w-xs space-y-3">
+        <div className="w-full flex flex-col gap-1 max-w-xs space-y-3">
           <Button
             id="kakao-login-btn"
             onClick={() => {
@@ -45,21 +45,22 @@ export default function LoginPage() {
             <span className="flex-1 text-center">카카오로 시작하기</span>
           </Button>
 
-          <Button
-            variant="outline"
-            className="w-full bg-white hover:bg-gray-50 text-black border-gray-200 h-12 relative"
-          >
-            <Image
-              src={'/images/svg/email.svg'}
-              width={18}
-              height={18}
-              className="absolute left-4"
-              alt="kakao"
-            />
-            <Link href="/login/email">
+          <Link href="/login/email">
+            <Button
+              variant="outline"
+              className="w-full bg-white hover:bg-gray-50 text-black border-gray-200 h-12 relative"
+            >
+              <Image
+                src={'/images/svg/email.svg'}
+                width={18}
+                height={18}
+                className="absolute left-4"
+                alt="kakao"
+              />
+
               <span className="flex-1 text-center">이메일로 시작하기</span>
-            </Link>
-          </Button>
+            </Button>
+          </Link>
 
           <button
             className="w-full text-sm text-gray-600 mt-4 underline"

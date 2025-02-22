@@ -11,8 +11,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSignUpStore } from '@/store/useSignUpStore';
 import { useEmailCheck } from '@/api/email/login';
-import { DialogClose, Modal } from '@/components/ui/modal';
-import { cn } from '@/lib/utils';
 
 const formSchema = z
   .object({
@@ -65,7 +63,9 @@ export function SignupForm() {
   const watchedEmail = watch('email');
   const watchedConfirmPassword = watch('confirmPassword');
 
-  const { mutate: checkEmail, isPending: checkEmailLoading } = useEmailCheck();
+  const { mutate: checkEmail, isPending: checkEmailLoading } = useEmailCheck({
+    onDuplicateCheck: (isDuplicate) => setIsDuplicate(!isDuplicate),
+  });
 
   // 각 필드의 유효성 상태 확인
   const getEmailCorrect = () => {
@@ -116,36 +116,7 @@ export function SignupForm() {
 
     if (!isValid) return;
 
-    checkEmail(watchedEmail, {
-      onSuccess: (data) => {
-        if (data.code === 409) {
-          setIsDuplicate(false);
-          setModalContent({
-            title: '이메일 중복 확인',
-            description: '이미 사용 중인 이메일입니다.',
-            type: 'error',
-          });
-        } else if (data.code === 200) {
-          setIsDuplicate(true);
-          setModalContent({
-            title: '이메일 중복 확인',
-            description: '사용 가능한 이메일입니다.',
-            type: 'success',
-          });
-        }
-        setIsModalOpen(true);
-      },
-      onError: (error) => {
-        console.error('Email check error:', error);
-        setModalContent({
-          title: '오류',
-          description: '이메일 중복 확인 중 오류가 발생했습니다.',
-          type: 'error',
-        });
-        setIsDuplicate(false);
-        setIsModalOpen(true);
-      },
-    });
+    checkEmail(watchedEmail);
   };
 
   return (
