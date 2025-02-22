@@ -8,6 +8,7 @@ interface SignUpResponse {
 export async function signUp(data: FormData): Promise<SignUpResponse> {
   const response = await fetch('/api/auth/signup', {
     method: 'POST',
+    cache: 'no-store',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       email: data.email,

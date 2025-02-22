@@ -39,6 +39,7 @@ async function signUpEmail(data: SignUpData): Promise<SignUpResponse> {
     `${process.env.NEXT_PUBLIC_API_URL}/auth/signup/email`,
     {
       method: 'POST',
+      cache: 'no-store',
       body: formData,
     },
   );

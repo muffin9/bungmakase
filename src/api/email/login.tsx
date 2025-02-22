@@ -12,6 +12,7 @@ export interface EmailResponse {
 async function checkEmailDuplicate(email: string): Promise<EmailResponse> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/auth/check-email?email=${email}`,
+    { cache: 'no-store' },
   );
 
   return response.json();
@@ -25,6 +26,7 @@ async function checkEmailLogin(
     `${process.env.NEXT_PUBLIC_API_URL}/auth/login/email`,
     {
       method: 'POST',
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
       },

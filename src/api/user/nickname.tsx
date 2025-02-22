@@ -13,6 +13,7 @@ async function checkNicknameDuplicate(
 ): Promise<EmailCheckResponse> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/auth/check-nickname?nickname=${nickname}`,
+    { cache: 'no-store' },
   );
 
   return response.json();
