@@ -55,7 +55,7 @@ export function useSignUpEmail() {
     mutationFn: signUpEmail,
     onSuccess: (data) => {
       if (data.code === 201) {
-        router.push('/');
+        router.push('/login/email');
       } else if (data.code === 400) {
         openModal({
           title: '이메일 회원가입 재확인',
