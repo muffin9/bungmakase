@@ -20,6 +20,10 @@ export async function kakaoLogin(): Promise<void> {
   }
 
   if (data.code === 200) {
-    if (data.data) window.location.href = data.data.loginUrl;
+    const development = process.env.NODE_ENV === 'development';
+    if (data.data)
+      window.location.href = `${data.data.loginUrl}&${
+        development ? 'state=local' : ''
+      }`;
   }
 }
