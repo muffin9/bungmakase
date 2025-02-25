@@ -7,14 +7,13 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 interface ModalProps {
-  triggerElement: ReactNode;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
   titleElement: ReactNode;
   children?: ReactNode;
 }
 
 const Dialog = DialogPrimitive.Root;
-
-const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = DialogPrimitive.Portal;
 
@@ -110,9 +109,13 @@ const DialogDescription = React.forwardRef<
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
-const Modal = ({ triggerElement, titleElement, children }: ModalProps) => (
-  <Dialog>
-    <DialogTrigger asChild>{triggerElement}</DialogTrigger>
+const Modal = ({
+  isOpen,
+  onOpenChange,
+  titleElement,
+  children,
+}: ModalProps) => (
+  <Dialog open={isOpen} onOpenChange={onOpenChange}>
     <DialogPortal>
       <DialogOverlay />
       <DialogContent>

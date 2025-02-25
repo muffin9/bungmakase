@@ -10,6 +10,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSignUpStore } from '@/store/useSignUpStore';
+import { useEmailCheck } from '@/api/email/login';
 
 const formSchema = z
   .object({
@@ -22,8 +23,8 @@ const formSchema = z
       .min(1, '비밀번호를 입력해주세요')
       .min(8, '비밀번호는 8자 이상이어야 합니다')
       .regex(
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-        '비밀번호는 영문+숫자 조합으로 8자 이상 입력해주세요.',
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
+        '비밀번호는 영문+숫자+특수문자 조합으로 8자 이상 입력해주세요.',
       ),
     confirmPassword: z.string().min(1, '비밀번호 확인을 입력해주세요'),
   })
@@ -55,6 +56,10 @@ export function SignupForm() {
   const watchedPassword = watch('password');
   const watchedEmail = watch('email');
   const watchedConfirmPassword = watch('confirmPassword');
+
+  const { mutate: checkEmail, isPending: checkEmailLoading } = useEmailCheck({
+    onDuplicateCheck: (isDuplicate) => setIsDuplicate(!isDuplicate),
+  });
 
   // 각 필드의 유효성 상태 확인
   const getEmailCorrect = () => {
@@ -102,10 +107,10 @@ export function SignupForm() {
 
   const handleDuplicateCheck = async () => {
     const isValid = await trigger('email');
+
     if (!isValid) return;
 
-    // TODO: 중복 체크 API 호출
-    setIsDuplicate(true);
+    checkEmail(watchedEmail);
   };
 
   return (
@@ -135,10 +140,11 @@ export function SignupForm() {
         </div>
         <Button
           type="button"
-          onClick={handleDuplicateCheck}
+          disabled={checkEmailLoading}
           className="w-[70px] h-[50px] self-start mt-8 text-xs"
+          onClick={handleDuplicateCheck}
         >
-          중복 확인
+          {checkEmailLoading ? '확인 중...' : '중복 확인'}
         </Button>
       </div>
 
@@ -209,7 +215,7 @@ export function SignupForm() {
       <Button
         type="submit"
         className="mt-auto"
-        disabled={!isButtonEnabled && !isDuplicate}
+        disabled={!isButtonEnabled || !isDuplicate}
       >
         이동
       </Button>

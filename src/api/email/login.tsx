@@ -1,0 +1,106 @@
+import { useModalStore } from '@/hooks/useModalStore';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+
+export interface EmailResponse {
+  code: number;
+  data: null;
+  message: string;
+  status: 'success' | 'fail';
+}
+
+async function checkEmailDuplicate(email: string): Promise<EmailResponse> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/check-email?email=${email}`,
+    { cache: 'no-store' },
+  );
+
+  return response.json();
+}
+
+async function checkEmailLogin(
+  email: string,
+  password: string,
+): Promise<EmailResponse> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/login/email`,
+    {
+      method: 'POST',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // 쿠키를 받기 위해 필요
+      body: JSON.stringify({ email, password }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('이메일 로그인 중 오류가 발생했습니다.');
+  }
+
+  return response.json();
+}
+
+interface UseEmailCheckProps {
+  onDuplicateCheck?: (isDuplicate: boolean) => void;
+}
+
+export function useEmailCheck({ onDuplicateCheck }: UseEmailCheckProps = {}) {
+  const { openModal } = useModalStore();
+
+  return useMutation({
+    mutationFn: (email: string) => checkEmailDuplicate(email),
+    onSuccess: (data) => {
+      if (data.code === 409) {
+        onDuplicateCheck?.(true);
+        openModal({
+          title: '이메일 중복 확인',
+          description: '이미 사용 중인 이메일입니다.',
+          type: 'error',
+        });
+      } else if (data.code === 200) {
+        onDuplicateCheck?.(false);
+        openModal({
+          title: '이메일 중복 확인',
+          description: '사용 가능한 이메일입니다.',
+          type: 'success',
+        });
+      }
+    },
+    onError: () => {
+      onDuplicateCheck?.(true);
+      openModal({
+        title: '오류',
+        description: '이메일 중복 확인 중 오류가 발생했습니다.',
+        type: 'error',
+      });
+    },
+  });
+}
+
+export function useEmailLogin() {
+  const router = useRouter();
+  const { openModal } = useModalStore();
+
+  return useMutation({
+    mutationFn: (data: { email: string; password: string }) =>
+      checkEmailLogin(data.email, data.password),
+    onSuccess: () => {
+      openModal({
+        title: '로그인 성공',
+        description: '로그인에 성공했습니다.',
+        type: 'success',
+      });
+      router.push('/');
+    },
+    onError: () => {
+      openModal({
+        title: '로그인 실패',
+        description: '아이디 또는 비밀번호를 확인해주세요.',
+        type: 'error',
+      });
+      console.error('로그인 중 오류가 발생했습니다.');
+    },
+  });
+}
