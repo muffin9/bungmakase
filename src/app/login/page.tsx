@@ -1,6 +1,5 @@
 'use client';
 
-import { kakaoLogin } from '@/api/login';
 import Logo from '@/components/common/Logo';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
@@ -10,7 +9,8 @@ import { useRouter } from 'next/navigation';
 export default function LoginPage() {
   const router = useRouter();
   const loginWithKakao = async () => {
-    await kakaoLogin();
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}&response_type=code`;
+    window.location.href = kakaoAuthUrl;
   };
 
   return (
