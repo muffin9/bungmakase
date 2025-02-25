@@ -10,6 +10,7 @@ export async function kakaoLogin(): Promise<void> {
     `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao`,
     {
       method: 'GET',
+      credentials: 'include',
     },
   );
 
