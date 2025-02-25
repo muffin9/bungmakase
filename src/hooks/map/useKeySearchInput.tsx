@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import useSearchPlace from '@/store/useSearchPlace';
+import { useSearchPlaceStore } from '@/store/useSearchPlace';
 import useGeolocation from './useGeolocation';
 import { SearchPlaceType } from '@/types/map';
 
@@ -11,14 +11,18 @@ declare global {
 
 function useKeySearchInput() {
   const location = useGeolocation();
-  const { setResultSearchInfo } = useSearchPlace();
+  const { setResultSearchInfo } = useSearchPlaceStore();
 
   const placesSearchCallBack = (data: SearchPlaceType[], status: string) => {
-    if (status === window.kakao.maps.services.Status.OK) {
+    if (
+      status === window.kakao.maps.services.Status.OK ||
+      status === window.kakao.maps.services.Status.ZERO_RESULT
+    ) {
       const searchPlaceInfos = data.map((place: SearchPlaceType) => ({
         place_id: +place.id,
         place_name: place.place_name,
         address: place.address_name,
+        road_address_name: place.road_address_name,
         latitude: +place.y,
         longitude: +place.x,
         detail_link: place.place_url,
@@ -27,9 +31,7 @@ function useKeySearchInput() {
       // set searchPlaceInfos to state
       setResultSearchInfo(searchPlaceInfos);
     }
-    if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-      // 검색 결과가 존재하지 않습니다.
-    } else if (status === window.kakao.maps.services.Status.ERROR) {
+    if (status === window.kakao.maps.services.Status.ERROR) {
       // 검색 결과 중 오류가 발생했습니다.
     }
   };

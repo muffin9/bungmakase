@@ -18,6 +18,7 @@ export interface SearchPlaceInfoType {
   place_id: number;
   place_name: string;
   address: string;
+  road_address_name: string;
   latitude: number;
   longitude: number;
   detail_link: string;
