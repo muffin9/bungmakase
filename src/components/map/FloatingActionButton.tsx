@@ -45,7 +45,7 @@ const FloatingActionButton = () => {
 
         <div
           className="flex items-center gap-4 cursor-pointer"
-          onClick={() => router.push('/map/store')}
+          onClick={() => router.push('/map/shop')}
         >
           <div className="w-[30px] h-[30px] flex justify-center items-center rounded-full bg-[#FFA914]">
             <Image

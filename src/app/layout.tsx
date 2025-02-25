@@ -4,6 +4,7 @@ import { Providers } from './providers';
 import { gmarketSans, OwnglyphPDH } from '@/styles/font';
 import { NavigationWrapper } from '@/components/common/Navigation/NavigationWrapper';
 import { GlobalModal } from '@/components/common/GlobalModal';
+import KakaoScript from '@/hooks/map/useKakaoScript';
 
 export const metadata: Metadata = {
   title: '붕마카세',
@@ -26,6 +27,7 @@ export default function RootLayout({
           <GlobalModal />
         </Providers>
       </body>
+      <KakaoScript />
     </html>
   );
 }
