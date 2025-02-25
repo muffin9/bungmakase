@@ -19,6 +19,7 @@ declare global {
 
 const KakaoMap = ({ children }: KakaoMapProps) => {
   const kakaoMapRef = useRef<HTMLElement | null | any>(null);
+  const markerRef = useRef<any>(null);
   const { setRoadAddress } = useCurrentAddress();
   const { location } = useGeolocation();
 
@@ -43,15 +44,49 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
 
         const geocoder = new window.kakao.maps.services.Geocoder();
 
+        setMyMarker(map.getCenter());
+
         window.kakao.maps.event.addListener(map, 'center_changed', () => {
           const center = map.getCenter();
+          setMyMarker(center);
           getAddressFromCoords(center, geocoder);
         });
 
         getAddressFromCoords(map.getCenter(), geocoder);
       });
     };
+
+    return () => {
+      if (markerRef.current) {
+        markerRef.current.setMap(null);
+      }
+    };
   }, []);
+
+  const setMyMarker = (coords: any) => {
+    if (markerRef.current) {
+      markerRef.current.setMap(null);
+    }
+
+    const imageSize = new window.kakao.maps.Size(55, 55);
+    const markerImage = new window.kakao.maps.MarkerImage(
+      '/images/marker.png',
+      imageSize,
+    );
+
+    const myMarkerPosition = new window.kakao.maps.LatLng(
+      coords.getLat(),
+      coords.getLng(),
+    );
+
+    const myMarker = new window.kakao.maps.Marker({
+      position: myMarkerPosition,
+      image: markerImage,
+    });
+
+    myMarker.setMap(kakaoMapRef.current);
+    markerRef.current = myMarker;
+  };
 
   const getAddressFromCoords = (coords: any, geocoder: any) => {
     geocoder.coord2Address(
