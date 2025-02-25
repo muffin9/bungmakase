@@ -1,9 +1,13 @@
+'use client';
+
 import { useSearchPlaceStore } from '@/store/useSearchPlace';
 import { SearchPlaceInfoType } from '@/types/map';
 import { Separator } from '../ui/separator';
 import useGeolocation from '@/hooks/map/useGeolocation';
+import { useRouter } from 'next/navigation';
 
 export function AddressResultList() {
+  const router = useRouter();
   const { resultSearchInfo } = useSearchPlaceStore();
   const { setLocation } = useGeolocation();
 
@@ -12,6 +16,7 @@ export function AddressResultList() {
       latitude: resultInfo.latitude,
       longitude: resultInfo.longitude,
     });
+    router.push('/map/shop');
   };
 
   return (
@@ -21,6 +26,7 @@ export function AddressResultList() {
           <div
             key={resultInfo.place_id}
             onClick={() => handleClickAddress(resultInfo)}
+            className="cursor-pointer"
           >
             <div className="flex flex-col gap-2 py-2">
               <div className="flex items-center gap-4">
