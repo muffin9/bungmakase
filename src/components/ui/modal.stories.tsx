@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Modal } from './modal';
-import { Button } from './button';
 import Image from 'next/image';
 import Logo from '../common/Logo';
 
@@ -15,10 +14,6 @@ const meta = {
   tags: ['autodocs'],
   decorators: [(Story) => <Story />],
   argTypes: {
-    triggerElement: {
-      control: false,
-      description: '모달을 열리도록 하는 트리거 버튼',
-    },
     titleElement: {
       control: false,
       description: '타이틀 Element',
@@ -36,7 +31,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    triggerElement: <Button>Open Default Modal Button</Button>,
+    isOpen: true,
+    onOpenChange: () => {},
     titleElement: (
       <div>
         <span className="font-bold text-[#9C6403] text-2xl">붕어빵 이름</span>
@@ -55,7 +51,8 @@ export const Default: Story = {
 
 export const BooksModal: Story = {
   args: {
-    triggerElement: <Button>Open Books Modal Button</Button>,
+    isOpen: true,
+    onOpenChange: () => {},
     titleElement: (
       <div>
         <span className="font-bold">도감이 저장되었습니다</span>
