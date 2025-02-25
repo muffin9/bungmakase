@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import ReBoundButton from '../map/ReBoundButton';
 import useGeolocation from '@/hooks/map/useGeolocation';
 import { defaultCoords } from '@/constants/map';
+import { useCurrentAddress } from '@/store/useCurrentAddress';
 
 interface KakaoMapProps {
   children: React.ReactNode;
@@ -18,9 +19,8 @@ declare global {
 
 const KakaoMap = ({ children }: KakaoMapProps) => {
   const kakaoMapRef = useRef<HTMLElement | null | any>(null);
-  const [address, setAddress] = useState('');
-  const location = useGeolocation();
-  console.log(address);
+  const { setRoadAddress } = useCurrentAddress();
+  const { location } = useGeolocation();
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -60,7 +60,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
       (result: any, status: any) => {
         if (status === window.kakao.maps.services.Status.OK) {
           const roadAddress = result[0].address?.address_name;
-          setAddress(roadAddress);
+          setRoadAddress(roadAddress);
         }
       },
     );

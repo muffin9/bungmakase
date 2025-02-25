@@ -2,6 +2,7 @@
 import { useSearchPlaceStore } from '@/store/useSearchPlace';
 import useGeolocation from './useGeolocation';
 import { SearchPlaceType } from '@/types/map';
+import { useCurrentAddress } from '@/store/useCurrentAddress';
 
 declare global {
   interface Window {
@@ -10,8 +11,9 @@ declare global {
 }
 
 function useKeySearchInput() {
-  const location = useGeolocation();
+  const { location } = useGeolocation();
   const { setResultSearchInfo } = useSearchPlaceStore();
+  const { setCurrentAddress } = useCurrentAddress();
 
   const placesSearchCallBack = (data: SearchPlaceType[], status: string) => {
     if (
@@ -30,20 +32,23 @@ function useKeySearchInput() {
       }));
       // set searchPlaceInfos to state
       setResultSearchInfo(searchPlaceInfos);
+      return true;
     }
     if (status === window.kakao.maps.services.Status.ERROR) {
       // 검색 결과 중 오류가 발생했습니다.
+      return false;
     }
   };
 
   async function searchAddressToCoordinate(address: string) {
     const kakaoSearchService = new window.kakao.maps.services.Places();
-    return kakaoSearchService.keywordSearch(address, placesSearchCallBack, {
+    kakaoSearchService.keywordSearch(address, placesSearchCallBack, {
       location: new window.kakao.maps.LatLng(
         location.latitude,
         location.longitude,
       ),
     });
+    setCurrentAddress(address);
   }
 
   return { searchAddressToCoordinate };

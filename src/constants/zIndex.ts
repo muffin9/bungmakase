@@ -3,4 +3,5 @@ export const zIndex = {
   navigation: 50,
   mapFooter: 50,
   reboundButton: 50,
+  loadAddressSection: 50,
 };

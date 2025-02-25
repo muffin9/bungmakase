@@ -25,7 +25,7 @@ function useGeolocation() {
     }
   }, []);
 
-  return location;
+  return { location, setLocation };
 }
 
 export default useGeolocation;
