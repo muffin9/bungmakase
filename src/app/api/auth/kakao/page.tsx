@@ -3,7 +3,7 @@
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 // import { NextRequest } from 'next/server';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 // export async function GET(request: NextRequest) {
 //   const searchParams = request.nextUrl.searchParams;
@@ -25,13 +25,7 @@ import { useEffect, useState } from 'react';
 export default function AuthKakao() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [code, setCode] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (searchParams.has('code')) {
-      setCode(searchParams.get('code'));
-    }
-  }, [searchParams]);
+  const code = searchParams.get('code');
 
   useEffect(() => {
     async function getKakaoLogin() {
@@ -51,7 +45,7 @@ export default function AuthKakao() {
     }
 
     if (code) getKakaoLogin();
-  }, [code]);
+  }, [code, router]);
 
   return <></>;
 }
