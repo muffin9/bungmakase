@@ -16,7 +16,8 @@ export default function KakaoCallback() {
         const isLocal = process.env.NODE_ENV === 'development' ? 'local' : '';
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback?code=${code}&state=${isLocal}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback?code=${code}` +
+            (isLocal && `&state=${isLocal}`),
           { withCredentials: true },
         );
 
