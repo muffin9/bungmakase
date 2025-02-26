@@ -31,7 +31,13 @@ export const shouldRedirectToLogin = (
   accessToken: string | null,
 ): boolean => {
   // level, profile ~~ 동적 경로들은 무조건 로그인 필요.
-  const protectedPathPatterns = ['/level', '/profile'];
+  const protectedPathPatterns = [
+    '/level',
+    '/profile',
+    '/dogam',
+    '/mypage',
+    '/review',
+  ];
   const isProtectedPattern = protectedPathPatterns.some(
     (pattern) => pathname === pattern || pathname.startsWith(`${pattern}/`),
   );

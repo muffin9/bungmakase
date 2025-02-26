@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { setCookie } from 'cookies-next';
 
 export default function KakaoCallback() {
   const router = useRouter();
@@ -19,7 +20,15 @@ export default function KakaoCallback() {
           { withCredentials: true },
         );
 
-        console.log(response);
+        if (response.data.data) {
+          const token = response.data.data.token;
+          setCookie('token', token, {
+            maxAge: 3600 * 24,
+            secure: true,
+            sameSite: 'strict',
+          });
+        }
+
         router.push('/');
       } catch (error) {
         console.error('Login error:', error);
