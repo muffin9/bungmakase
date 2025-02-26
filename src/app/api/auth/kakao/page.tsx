@@ -1,51 +1,10 @@
-'use client';
+import { Suspense } from 'react';
+import KakaoCallback from '@/hooks/useKakaoCallback';
 
-import axios from 'axios';
-import { useRouter, useSearchParams } from 'next/navigation';
-// import { NextRequest } from 'next/server';
-import { useEffect } from 'react';
-
-// export async function GET(request: NextRequest) {
-//   const searchParams = request.nextUrl.searchParams;
-//   const code = searchParams.get('code');
-
-//   if (code) {
-//     const isLocal = process.env.NODE_ENV === 'development' ? 'local' : '';
-
-//     const response = await axios.get(
-//       `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback?code=${code}&state=${isLocal}`,
-//     );
-
-//     console.log(response);
-
-//     if (response) redirect('/');
-//   }
-// }
-
-export default function AuthKakao() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const code = searchParams.get('code');
-
-  useEffect(() => {
-    async function getKakaoLogin() {
-      try {
-        const isLocal = process.env.NODE_ENV === 'development' ? 'local' : '';
-
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback?code=${code}&state=${isLocal}`,
-          { withCredentials: true },
-        );
-
-        console.log(response);
-        router.push('/');
-      } catch (error) {
-        console.error('Login error:', error);
-      }
-    }
-
-    if (code) getKakaoLogin();
-  }, [code, router]);
-
-  return <></>;
+export default function AuthKakaoPage() {
+  return (
+    <Suspense fallback={<div>카카오 로그인 처리중...</div>}>
+      <KakaoCallback />
+    </Suspense>
+  );
 }
