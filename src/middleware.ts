@@ -4,7 +4,6 @@ import { shouldRedirectToHome, shouldRedirectToLogin } from './lib/router';
 
 export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('token')?.value as string;
-  console.log(accessToken);
   const pathname = request.nextUrl.pathname;
 
   if (shouldRedirectToHome(pathname, accessToken)) {
