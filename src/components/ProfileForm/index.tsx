@@ -15,6 +15,9 @@ import { useState } from 'react';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useSignUpStore } from '@/store/useSignUpStore';
+import { useNicknameCheck } from '@/api/user/nickname';
+import { useSignUpEmail } from '@/api/email/signup';
 
 const nicknameSchema = z
   .string()
@@ -25,13 +28,20 @@ const nicknameSchema = z
 export function ProfileForm() {
   const { fileInputRef, files, isLoading, handleImageChange } =
     useImageUpload();
+  const { loginData } = useSignUpStore();
   const [isDuplicate, setIsDuplicate] = useState(false);
+
+  const { mutate: checkNickname, isPending: checkNicknameLoading } =
+    useNicknameCheck({
+      onDuplicateCheck: (isDuplicate) => setIsDuplicate(!isDuplicate),
+    });
+
+  const { mutate: signUpEmail, isPending: signUpLoading } = useSignUpEmail();
 
   const {
     register,
     formState: { errors, dirtyFields },
     watch,
-    handleSubmit,
     trigger,
   } = useForm({
     resolver: zodResolver(nicknameSchema),
@@ -52,19 +62,20 @@ export function ProfileForm() {
     const isValid = await trigger('nickname');
     if (!isValid) return;
 
-    // TODO: 중복 체크 API 호출
-    setIsDuplicate(true);
+    checkNickname(watchedNickname);
   };
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = async () => {
     const isValid = await trigger('nickname');
     if (!isValid) return;
 
-    console.log('Form submitted:', {
-      ...data,
-      files,
+    signUpEmail({
+      email: loginData.email!,
+      password: loginData.password!,
+      nickname: watchedNickname,
+      profileImage: files[0],
     });
-  });
+  };
 
   return (
     <motion.section
@@ -88,7 +99,10 @@ export function ProfileForm() {
 
         <form
           className="h-full flex flex-col items-center mt-24"
-          onSubmit={onSubmit}
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
         >
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -154,19 +168,20 @@ export function ProfileForm() {
             </div>
             <Button
               type="button"
+              disabled={checkNicknameLoading}
               onClick={handleDuplicateCheck}
               className="w-[70px] h-[50px] self-start mt-8 text-xs"
             >
-              중복 확인
+              {checkNicknameLoading ? '확인 중...' : '중복 확인'}
             </Button>
           </div>
 
           <Button
             type="submit"
             className="mt-auto w-full"
-            disabled={!isDuplicate}
+            disabled={!isDuplicate || signUpLoading}
           >
-            완료
+            {signUpLoading ? '처리 중...' : '완료'}
           </Button>
         </form>
       </div>
