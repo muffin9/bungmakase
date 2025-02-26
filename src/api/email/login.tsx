@@ -2,7 +2,7 @@ import { useModalStore } from '@/hooks/useModalStore';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { setCookie } from 'cookies-next';
+import { setEncryptedAccessToken } from '@/lib/cookie';
 
 export interface EmailResponse {
   code: number;
@@ -32,11 +32,7 @@ async function checkEmailLogin(email: string, password: string) {
 
   if (response.data.data) {
     const token = response.data.data.token;
-    setCookie('token', token, {
-      maxAge: 3600 * 24,
-      secure: true,
-      sameSite: 'strict',
-    });
+    setEncryptedAccessToken(token);
   }
 }
 

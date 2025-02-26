@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { setCookie } from 'cookies-next';
+import { setEncryptedAccessToken } from '@/lib/cookie';
 
 export default function KakaoCallback() {
   const router = useRouter();
@@ -23,11 +23,7 @@ export default function KakaoCallback() {
 
         if (response.data.data) {
           const token = response.data.data.token;
-          setCookie('token', token, {
-            maxAge: 3600 * 24,
-            secure: true,
-            sameSite: 'strict',
-          });
+          setEncryptedAccessToken(token);
         }
 
         router.push('/');
