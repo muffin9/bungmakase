@@ -1,26 +1,26 @@
 'use client';
 
 import axios from 'axios';
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
-import { NextRequest } from 'next/server';
+import { useRouter, useSearchParams } from 'next/navigation';
+// import { NextRequest } from 'next/server';
 import { useEffect, useState } from 'react';
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const code = searchParams.get('code');
+// export async function GET(request: NextRequest) {
+//   const searchParams = request.nextUrl.searchParams;
+//   const code = searchParams.get('code');
 
-  if (code) {
-    const isLocal = process.env.NODE_ENV === 'development' ? 'local' : '';
+//   if (code) {
+//     const isLocal = process.env.NODE_ENV === 'development' ? 'local' : '';
 
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback?code=${code}&state=${isLocal}`,
-    );
+//     const response = await axios.get(
+//       `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao/callback?code=${code}&state=${isLocal}`,
+//     );
 
-    console.log(response);
+//     console.log(response);
 
-    if (response) redirect('/');
-  }
-}
+//     if (response) redirect('/');
+//   }
+// }
 
 export default function AuthKakao() {
   const router = useRouter();
