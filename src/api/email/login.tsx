@@ -1,6 +1,7 @@
 import { useModalStore } from '@/hooks/useModalStore';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 export interface EmailResponse {
   code: number;
@@ -18,28 +19,18 @@ async function checkEmailDuplicate(email: string): Promise<EmailResponse> {
   return response.json();
 }
 
-async function checkEmailLogin(
-  email: string,
-  password: string,
-): Promise<EmailResponse> {
-  const response = await fetch(
+async function checkEmailLogin(email: string, password: string) {
+  const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/auth/login/email`,
     {
-      method: 'POST',
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include', // 쿠키를 받기 위해 필요
-      body: JSON.stringify({ email, password }),
+      email,
+      password,
     },
+    { withCredentials: true },
   );
 
-  if (!response.ok) {
-    throw new Error('이메일 로그인 중 오류가 발생했습니다.');
-  }
-
-  return response.json();
+  console.log(response);
+  console.log(response.headers);
 }
 
 interface UseEmailCheckProps {
