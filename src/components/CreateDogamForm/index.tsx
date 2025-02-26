@@ -7,8 +7,8 @@ import { useState } from 'react';
 
 export function CreateDogamForm() {
   const router = useRouter();
-  const [type, setType] = useState('');
-  const [info, setInfo] = useState('');
+  const [bungName, setBungName] = useState('');
+  const [tags, setTags] = useState('');
 
   return (
     <div className="h-full flex flex-col items-center justify-center">
@@ -16,22 +16,23 @@ export function CreateDogamForm() {
         <LabeledInfoField
           label="붕어빵 종류"
           isEditable
-          value={type}
+          value={bungName}
           placeholder={'직접 입력하기'}
-          onChange={(value) => setType(value)}
+          onChange={(value) => setBungName(value)}
         />
         <LabeledInfoField
           label="붕어빵 특징"
           isEditable
-          value={info}
+          value={tags}
           placeholder={'# 직접 입력하기'}
-          onChange={(value) => setInfo(value)}
+          onChange={(value) => setTags(value)}
         />
       </div>
       <Button
         className="mt-8"
         onClick={() => {
           // TODO: Create Dogam CALL API
+          // /level/suggest
           router.back();
         }}
       >

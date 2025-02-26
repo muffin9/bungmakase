@@ -6,6 +6,7 @@ import ReBoundButton from '../map/ReBoundButton';
 import useGeolocation from '@/hooks/map/useGeolocation';
 import { defaultCoords } from '@/constants/map';
 import { useCurrentAddress } from '@/store/useCurrentAddress';
+import { useGetMarkers } from '@/api/map/marker';
 
 interface KakaoMapProps {
   children: React.ReactNode;
@@ -20,8 +21,11 @@ declare global {
 const KakaoMap = ({ children }: KakaoMapProps) => {
   const kakaoMapRef = useRef<HTMLElement | null | any>(null);
   const markerRef = useRef<any>(null);
-  const { setRoadAddress } = useCurrentAddress();
+  const { setRoadAddress, setLocation } = useCurrentAddress();
   const { location } = useGeolocation();
+  const { data: markers } = useGetMarkers();
+
+  console.log(markers);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -96,6 +100,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         if (status === window.kakao.maps.services.Status.OK) {
           const roadAddress = result[0].address?.address_name;
           setRoadAddress(roadAddress);
+          setLocation(coords.getLat(), coords.getLng());
         }
       },
     );

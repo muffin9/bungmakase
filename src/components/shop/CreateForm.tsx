@@ -9,6 +9,8 @@ import useShopStore from '@/store/useShopStore';
 import { Button } from '@/components/ui/button';
 import { LabeledInfoField } from '../common/LabeledInfoField';
 import { useImageUpload } from '@/hooks/useImageUpload';
+import { useCreateShop } from '@/api/shop/create';
+import { useCurrentAddress } from '@/store/useCurrentAddress';
 
 const formSchema = z.object({
   shopName: z.string().min(1, '이름을 입력해주세요'),
@@ -32,7 +34,9 @@ const formSchema = z.object({
 export type FormData = z.infer<typeof formSchema>;
 
 function CreateForm() {
+  const { mutate: createShop } = useCreateShop();
   const { shopInfo, updateShopInfo } = useShopStore();
+  const { latitude, longitude, currentAddress } = useCurrentAddress();
 
   const {
     register,
@@ -116,9 +120,20 @@ function CreateForm() {
       startTime: data.startTime,
       endTime: data.endTime,
       bungType: shopInfo.bungType,
+      file: files,
     });
-    console.log(data, files);
-    // TODO: 다음 단계로 이동 로직 추가
+
+    createShop({
+      shopName: data.shopName,
+      address: currentAddress,
+      latitude: latitude,
+      longitude: longitude,
+      phone: data.phone,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      tastes: [shopInfo.bungType],
+      file: files[0],
+    });
   });
 
   const handleBungTypeChange = (type: string) => {
@@ -191,7 +206,7 @@ function CreateForm() {
 
       <Button
         type="submit"
-        disabled={!isValid || !shopInfo.bungType}
+        disabled={!isValid || !files.length || !shopInfo.bungType}
         className="mt-auto mb-12"
       >
         등록하기
