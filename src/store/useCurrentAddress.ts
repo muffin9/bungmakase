@@ -1,3 +1,4 @@
+import { defaultCoords } from '@/constants/map';
 import { create } from 'zustand';
 
 interface Location {
@@ -14,8 +15,8 @@ interface CurrentAddressState {
 }
 
 const initialLocation: Location = {
-  latitude: 0,
-  longitude: 0,
+  latitude: defaultCoords.lat,
+  longitude: defaultCoords.lng,
   currentAddress: '',
   roadAddress: '',
 };

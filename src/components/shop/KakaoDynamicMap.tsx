@@ -5,8 +5,6 @@ import { useEffect, useRef } from 'react';
 import ReBoundButton from '../map/ReBoundButton';
 import useGeolocation from '@/hooks/map/useGeolocation';
 import { useCurrentAddress } from '@/store/useCurrentAddress';
-import { useGetMarkersInBounds } from '@/api/map/marker';
-import { MarkerType } from '@/types/map';
 
 interface KakaoMapProps {
   children: React.ReactNode;
@@ -18,17 +16,12 @@ declare global {
   }
 }
 
-const KakaoMap = ({ children }: KakaoMapProps) => {
+const KakaoDynamicMap = ({ children }: KakaoMapProps) => {
   const mapRef = useRef<HTMLElement | null | any>(null);
   const markerRef = useRef<any>(null);
 
-  const { location } = useCurrentAddress();
+  const { location, setLocation } = useCurrentAddress();
   const { myLocation } = useGeolocation();
-
-  const { data: markersInBounds } = useGetMarkersInBounds({
-    sw: { lat: location.latitude - 0.1, lng: location.longitude - 0.1 },
-    ne: { lat: location.latitude + 0.1, lng: location.longitude + 0.1 },
-  });
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -49,32 +42,14 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         const map = new window.kakao.maps.Map(container, options);
         mapRef.current = map;
 
+        const geocoder = new window.kakao.maps.services.Geocoder();
         setMyMarker(map.getCenter());
 
-        const newMarkers = [] as any;
-        const bungMarkerSize = new window.kakao.maps.Size(34, 34);
-        const bungMarkerImage = new window.kakao.maps.MarkerImage(
-          '/images/bung_marker.png',
-          bungMarkerSize,
-        );
-
-        if (window.kakao.maps && markersInBounds) {
-          markersInBounds.forEach((markerData: MarkerType) => {
-            const marker = new window.kakao.maps.Marker({
-              map: map,
-              position: new window.kakao.maps.LatLng(
-                markerData.latitude,
-                markerData.longitude,
-              ),
-              image: bungMarkerImage,
-              zIndex: 10,
-            });
-
-            newMarkers.push(marker);
-          });
-
-          newMarkers.forEach((marker: any) => marker.setMap(mapRef.current));
-        }
+        window.kakao.maps.event.addListener(map, 'dragend', () => {
+          const center = map.getCenter();
+          setMyMarker(center);
+          getAddressFromCoords(center, geocoder);
+        });
       });
     };
 
@@ -83,7 +58,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         markerRef.current.setMap(null);
       }
     };
-  }, [location.latitude, location.longitude, markersInBounds]);
+  }, []);
 
   const setMyMarker = (coords: any) => {
     if (markerRef.current) {
@@ -92,7 +67,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
 
     const imageSize = new window.kakao.maps.Size(55, 55);
     const markerImage = new window.kakao.maps.MarkerImage(
-      '/images/my_position.png',
+      '/images/my_marker.png',
       imageSize,
     );
 
@@ -108,6 +83,23 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
 
     myMarker.setMap(mapRef.current);
     markerRef.current = myMarker;
+  };
+
+  const getAddressFromCoords = (coords: any, geocoder: any) => {
+    geocoder.coord2Address(
+      coords.getLng(),
+      coords.getLat(),
+      (result: any, status: any) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          const roadAddress = result[0].address?.address_name;
+          setLocation({
+            currentAddress: roadAddress,
+            latitude: coords.getLat(),
+            longitude: coords.getLng(),
+          });
+        }
+      },
+    );
   };
 
   const onClickReBound = () => {
@@ -137,4 +129,4 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
   );
 };
 
-export default KakaoMap;
+export default KakaoDynamicMap;
