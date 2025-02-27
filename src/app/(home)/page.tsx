@@ -3,7 +3,7 @@
 import { getDogams, getUserDogamDetail, getUserDogams } from '@/api/home';
 import Logo from '@/components/common/Logo';
 import { Modal } from '@/components/ui/modal';
-import useToggle from '@/lib/hooks/useToggle';
+import useToggle from '@/hooks/useToggle';
 import { Dogam, DogamDetail, Dogams } from '@/types/home';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
