@@ -1,9 +1,9 @@
 'use client';
 
 import BackButton from '@/components/common/BackButton';
-import KakaoMap from '@/components/common/KakaoMap';
 import { SearchInput } from '@/components/common/SearchInput';
 import { LoadAddressSection } from '@/components/map/LoadAddressSection';
+import KakaoDynamicMap from '@/components/shop/KakaoDynamicMap';
 import { zIndex } from '@/constants/zIndex';
 import { useRouter } from 'next/navigation';
 
@@ -11,7 +11,7 @@ export default function MapShopPage() {
   const router = useRouter();
 
   return (
-    <KakaoMap>
+    <KakaoDynamicMap>
       <header
         className={`p-4 w-full absolute left-[50%] -translate-x-1/2 z-${zIndex.mapHeader} bg-white`}
       >
@@ -32,6 +32,6 @@ export default function MapShopPage() {
       >
         <LoadAddressSection />
       </footer>
-    </KakaoMap>
+    </KakaoDynamicMap>
   );
 }

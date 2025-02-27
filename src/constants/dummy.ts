@@ -1,3 +1,5 @@
+import { SearchShopInfoType } from '@/types/map';
+
 export interface Store {
   id: string;
   name: string;
@@ -8,24 +10,32 @@ export interface Store {
   distance: string;
 }
 
-export const storeData: Store[] = [
+export const storeData: SearchShopInfoType[] = [
   {
-    id: '1',
-    name: '붕어빵 가게 이름',
-    imageUrl: '/images/sample_store.jpg',
-    businessHours: '01:00에 영업 종료',
-    rating: 4,
-    type: '붕어빵 종류',
-    distance: '현재 위치로부터 거리',
+    shopId: '1',
+    shopName: '붕어빵 가게 이름',
+    // imageUrl: '/images/sample_store.jpg',
+    startTime: '01:00',
+    endTime: '12:00',
+    address: '서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층',
+    latitude: 37.494589,
+    longitude: 126.868346,
+    star: 5,
+    tastes: ['팥', '슈크림', '호두'],
+    // distance: '현재 위치로부터 거리',
   },
   {
-    id: '2',
-    name: '붕어빵 가게 이름',
-    imageUrl: '/images/sample_store.jpg',
-    businessHours: '01:00에 영업 종료',
-    rating: 4,
-    type: '붕어빵 종류',
-    distance: '현재 위치로부터 거리',
+    shopId: '2',
+    shopName: '붕어빵 가게 이름',
+    // imageUrl: '/images/sample_store.jpg',
+    startTime: '01:00',
+    endTime: '12:00',
+    address: '망원',
+    latitude: 37.494589,
+    longitude: 126.868346,
+    star: 4,
+    tastes: ['팥', '슈크림'],
+    // distance: '현재 위치로부터 거리',
   },
 ];
 

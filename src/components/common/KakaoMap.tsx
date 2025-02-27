@@ -49,7 +49,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         const map = new window.kakao.maps.Map(container, options);
         mapRef.current = map;
 
-        setMyMarker(map.getCenter());
+        setMyMarker(myLocation.latitude, myLocation.longitude);
 
         const newMarkers = [] as any;
         const bungMarkerSize = new window.kakao.maps.Size(34, 34);
@@ -85,7 +85,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
     };
   }, [location.latitude, location.longitude, markersInBounds]);
 
-  const setMyMarker = (coords: any) => {
+  const setMyMarker = (latitude: number, longitude: number) => {
     if (markerRef.current) {
       markerRef.current.setMap(null);
     }
@@ -96,10 +96,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
       imageSize,
     );
 
-    const myMarkerPosition = new window.kakao.maps.LatLng(
-      coords.getLat(),
-      coords.getLng(),
-    );
+    const myMarkerPosition = new window.kakao.maps.LatLng(latitude, longitude);
 
     const myMarker = new window.kakao.maps.Marker({
       position: myMarkerPosition,

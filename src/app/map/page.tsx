@@ -3,12 +3,14 @@
 import KakaoMap from '@/components/common/KakaoMap';
 import { SearchInput } from '@/components/common/SearchInput';
 import FloatingActionButton from '@/components/map/FloatingActionButton';
+import { ShopResultSection } from '@/components/map/ShopResultSection';
 import { zIndex } from '@/constants/zIndex';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function MapPage() {
   const router = useRouter();
+
   return (
     <section>
       <KakaoMap>
@@ -25,6 +27,9 @@ export default function MapPage() {
         >
           <FloatingActionButton />
         </footer>
+        <div className={`absolute bottom-0 z-${zIndex.bottomDrawer}`}>
+          <ShopResultSection />
+        </div>
       </KakaoMap>
     </section>
   );

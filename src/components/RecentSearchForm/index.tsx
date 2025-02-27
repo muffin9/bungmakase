@@ -1,11 +1,16 @@
 'use client';
 
+import { getSearchResult } from '@/api/shop/search';
 import { useRecentSearches } from '@/hooks/useRecentSearches';
+import { useSearchShopStore } from '@/store/useSearchShopStore';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export function RecentSearchForm() {
+  const router = useRouter();
   const { recentSearches, removeRecentSearch, clearRecentSearches } =
     useRecentSearches();
+  const { setResultShopSearchInfo } = useSearchShopStore();
 
   return (
     <div className="flex flex-col">
@@ -21,8 +26,16 @@ export function RecentSearchForm() {
       <div className="flex flex-col gap-2">
         {recentSearches.map((term) => (
           <div key={term} className="flex justify-between">
-            {/* TODO: 검색 성공시, addRecentSearch 함수로 최근 검색어에 추가  */}
-            <p className="w-full cursor-pointer">{term}</p>
+            <p
+              className="w-full cursor-pointer"
+              onClick={async () => {
+                const data = await getSearchResult(term);
+                setResultShopSearchInfo(data);
+                router.push('/map');
+              }}
+            >
+              {term}
+            </p>
             <button onClick={() => removeRecentSearch(term)}>
               <Image
                 src="/images/svg/delete.svg"
