@@ -4,10 +4,12 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 
 interface BottomDrawerProps {
-  triggerElement: React.ReactNode;
+  triggerElement?: React.ReactNode;
   title?: string;
   className?: string;
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const Drawer = ({
@@ -78,8 +80,10 @@ const BottomDrawer = ({
   title,
   className,
   children,
+  open,
+  onOpenChange,
 }: BottomDrawerProps) => (
-  <Drawer>
+  <Drawer open={open} onOpenChange={onOpenChange}>
     <DrawerTrigger asChild>{triggerElement}</DrawerTrigger>
     <DrawerContent className={className}>
       <DrawerHeader>

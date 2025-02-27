@@ -3,7 +3,6 @@
 import { storeData } from '@/constants/dummy';
 import { SearchInput } from '../common/SearchInput';
 import { useMutation } from '@tanstack/react-query';
-import StoreInfo from '../common/StoreInfo';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
@@ -65,19 +64,19 @@ const SearchSection = () => {
         loading={isPending}
       />
       <motion.div initial="hidden" animate="show" className="space-y-4">
-        {storeData.map((store) => {
+        {storeData.map((item) => {
           return (
-            <motion.div key={store.id} variants={item}>
+            <motion.div key={item.shopId}>
               <div className="flex items-center gap-4">
                 <div className="relative w-[100px] h-[100px]">
                   <Image
-                    src={store.imageUrl}
-                    alt={store.name}
+                    src={item.imageUrl}
+                    alt={item.shopName}
                     fill
                     className="rounded-md"
                   />
                 </div>
-                <StoreInfo store={store} />
+                {/* <StoreInfo shop={shop} /> */}
               </div>
             </motion.div>
           );

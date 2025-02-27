@@ -12,6 +12,7 @@ export interface BaseInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export interface SearchInputProps extends BaseInputProps {
   onSearch?: (value: string) => void;
+  onEnter?: () => void;
   placeholder?: string;
   onClick?: () => void;
   loading?: boolean;

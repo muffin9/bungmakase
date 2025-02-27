@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import StoreInfo from './index';
+import ShopInfo from './index';
 import { storeData } from '@/constants/dummy';
 
-const meta: Meta<typeof StoreInfo> = {
-  title: 'components/common/StoreInfo',
-  component: StoreInfo,
+const meta: Meta<typeof ShopInfo> = {
+  title: 'components/common/ShopInfo',
+  component: ShopInfo,
   parameters: {
     layout: 'centered',
     docs: {
@@ -16,7 +16,7 @@ const meta: Meta<typeof StoreInfo> = {
   },
   tags: ['autodocs'],
   argTypes: {
-    store: {
+    shop: {
       description: '가게 정보 객체',
       control: 'object',
     },
@@ -24,37 +24,28 @@ const meta: Meta<typeof StoreInfo> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof StoreInfo>;
+type Story = StoryObj<typeof ShopInfo>;
 
 export const Default: Story = {
   args: {
-    store: storeData[0],
+    shop: storeData[0],
   },
 };
 
 export const LongStoreName: Story = {
   args: {
-    store: {
+    shop: {
       ...storeData[0],
-      name: '아주 긴 가게 이름을 가진 붕어빵 맛집 입니다 truncate 테스트',
+      shopName: '아주 긴 가게 이름을 가진 붕어빵 맛집 입니다 truncate 테스트',
     },
   },
 };
 
 export const Closed: Story = {
   args: {
-    store: {
+    shop: {
       ...storeData[0],
-      businessHours: '영업종료',
-    },
-  },
-};
-
-export const FarDistance: Story = {
-  args: {
-    store: {
-      ...storeData[0],
-      distance: '2.5km',
+      endTime: '영업종료',
     },
   },
 };
@@ -66,6 +57,6 @@ export const DarkMode: Story = {
     },
   },
   args: {
-    store: storeData[0],
+    shop: storeData[0],
   },
 };

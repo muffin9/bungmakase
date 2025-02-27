@@ -24,3 +24,29 @@ export interface SearchPlaceInfoType {
   detail_link: string;
   distance: string;
 }
+
+export interface MarkerType {
+  shopId: string;
+  address: string;
+  shopName: string;
+  startTime: string;
+  endTime: string;
+  latitude: number;
+  longitude: number;
+  star: number;
+  tastes: string[];
+}
+
+export interface SearchShopInfoType {
+  shopId: string;
+  shopName: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  star: number;
+  startTime: string;
+  endTime: string;
+  imageUrl: string;
+  tastes: string[];
+  distance?: number;
+}

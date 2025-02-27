@@ -11,6 +11,7 @@ export function SearchInput({
   onSearch,
   placeholder,
   onClick,
+  onEnter,
   loading,
   ...props
 }: SearchInputProps) {
@@ -37,6 +38,12 @@ export function SearchInput({
         placeholder={placeholder}
         onChange={handleChange}
         onClick={onClick}
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            onEnter?.();
+          }
+        }}
         className="h-[55px] bg-white rounded-[10px] border-[#FFA914] border-[1px]"
         {...props}
       />
