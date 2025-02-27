@@ -49,7 +49,7 @@ export function useCreateShop() {
   const { openModal } = useModalStore();
   const router = useRouter();
   const { resetShopInfo } = useShopStore();
-  const { resetCurrentAddress } = useCurrentAddress();
+  const { resetLocation } = useCurrentAddress();
 
   return useMutation({
     mutationFn: createShop,
@@ -69,7 +69,7 @@ export function useCreateShop() {
         });
       }
       resetShopInfo();
-      resetCurrentAddress();
+      resetLocation();
     },
     onError: () => {
       openModal({

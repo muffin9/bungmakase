@@ -5,12 +5,10 @@ import KakaoMap from '@/components/common/KakaoMap';
 import { SearchInput } from '@/components/common/SearchInput';
 import { LoadAddressSection } from '@/components/map/LoadAddressSection';
 import { zIndex } from '@/constants/zIndex';
-import { useCurrentAddress } from '@/store/useCurrentAddress';
 import { useRouter } from 'next/navigation';
 
 export default function MapShopPage() {
   const router = useRouter();
-  const { currentAddress } = useCurrentAddress();
 
   return (
     <KakaoMap>
@@ -25,7 +23,6 @@ export default function MapShopPage() {
           </span>
           <SearchInput
             placeholder={'주변 건물 이름, 주소'}
-            value={currentAddress}
             onClick={() => router.push('/map/shop/search')}
           />
         </div>

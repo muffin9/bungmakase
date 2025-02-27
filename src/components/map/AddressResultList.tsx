@@ -3,18 +3,20 @@
 import { useSearchPlaceStore } from '@/store/useSearchPlace';
 import { SearchPlaceInfoType } from '@/types/map';
 import { Separator } from '../ui/separator';
-import useGeolocation from '@/hooks/map/useGeolocation';
+import { useCurrentAddress } from '@/store/useCurrentAddress';
 import { useRouter } from 'next/navigation';
 
 export function AddressResultList() {
   const router = useRouter();
+  const { setLocation } = useCurrentAddress();
   const { resultSearchInfo } = useSearchPlaceStore();
-  const { setLocation } = useGeolocation();
 
   const handleClickAddress = (resultInfo: SearchPlaceInfoType) => {
     setLocation({
       latitude: resultInfo.latitude,
       longitude: resultInfo.longitude,
+      currentAddress: resultInfo.address,
+      roadAddress: resultInfo.road_address_name,
     });
     router.push('/map/shop');
   };

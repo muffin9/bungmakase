@@ -4,7 +4,6 @@
 import { useEffect, useRef } from 'react';
 import ReBoundButton from '../map/ReBoundButton';
 import useGeolocation from '@/hooks/map/useGeolocation';
-import { defaultCoords } from '@/constants/map';
 import { useCurrentAddress } from '@/store/useCurrentAddress';
 import { useGetMarkers } from '@/api/map/marker';
 
@@ -21,11 +20,11 @@ declare global {
 const KakaoMap = ({ children }: KakaoMapProps) => {
   const kakaoMapRef = useRef<HTMLElement | null | any>(null);
   const markerRef = useRef<any>(null);
-  const { setRoadAddress, setLocation } = useCurrentAddress();
-  const { location } = useGeolocation();
-  const { data: markers } = useGetMarkers();
+  const { location, setLocation } = useCurrentAddress();
+  const { myLocation } = useGeolocation();
+  // const { data: markers } = useGetMarkers();
 
-  console.log(markers);
+  console.log(location.latitude, location.longitude);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -37,8 +36,8 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         const container = document.getElementById('static_map');
         const options = {
           center: new window.kakao.maps.LatLng(
-            defaultCoords.lat,
-            defaultCoords.lng,
+            location.latitude || myLocation.latitude,
+            location.longitude || myLocation.longitude,
           ),
           level: 3,
         };
@@ -99,8 +98,11 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
       (result: any, status: any) => {
         if (status === window.kakao.maps.services.Status.OK) {
           const roadAddress = result[0].address?.address_name;
-          setRoadAddress(roadAddress);
-          setLocation(coords.getLat(), coords.getLng());
+          setLocation({
+            currentAddress: roadAddress,
+            latitude: coords.getLat(),
+            longitude: coords.getLng(),
+          });
         }
       },
     );
@@ -108,8 +110,8 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
 
   const onClickReBound = () => {
     const moveLatLon = new window.kakao.maps.LatLng(
-      location.latitude,
-      location.longitude,
+      myLocation.latitude,
+      myLocation.longitude,
     );
     if (kakaoMapRef.current) {
       kakaoMapRef.current.panTo(moveLatLon);

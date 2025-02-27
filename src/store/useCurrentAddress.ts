@@ -1,24 +1,30 @@
 import { create } from 'zustand';
 
-interface CurrentAddressState {
+interface Location {
   latitude: number;
   longitude: number;
   currentAddress: string;
   roadAddress: string;
-  setCurrentAddress: (address: string) => void;
-  setRoadAddress: (address: string) => void;
-  setLocation: (latitude: number, longitude: number) => void;
-  resetCurrentAddress: () => void;
 }
 
-export const useCurrentAddress = create<CurrentAddressState>((set) => ({
+interface CurrentAddressState {
+  location: Location;
+  setLocation: (location: Partial<Location>) => void;
+  resetLocation: () => void;
+}
+
+const initialLocation: Location = {
   latitude: 0,
   longitude: 0,
   currentAddress: '',
   roadAddress: '',
-  setCurrentAddress: (address) => set({ currentAddress: address }),
-  setRoadAddress: (roadAddress) => set({ roadAddress: roadAddress }),
-  setLocation: (latitude, longitude) => set({ latitude, longitude }),
-  resetCurrentAddress: () =>
-    set({ latitude: 0, longitude: 0, currentAddress: '', roadAddress: '' }),
+};
+
+export const useCurrentAddress = create<CurrentAddressState>()((set) => ({
+  location: initialLocation,
+  setLocation: (newLocation) =>
+    set((state) => ({
+      location: { ...state.location, ...newLocation },
+    })),
+  resetLocation: () => set({ location: initialLocation }),
 }));

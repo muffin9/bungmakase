@@ -36,7 +36,7 @@ export type FormData = z.infer<typeof formSchema>;
 function CreateForm() {
   const { mutate: createShop } = useCreateShop();
   const { shopInfo, updateShopInfo } = useShopStore();
-  const { latitude, longitude, currentAddress } = useCurrentAddress();
+  const { location } = useCurrentAddress();
 
   const {
     register,
@@ -125,9 +125,9 @@ function CreateForm() {
 
     createShop({
       shopName: data.shopName,
-      address: currentAddress,
-      latitude: latitude,
-      longitude: longitude,
+      address: location.currentAddress,
+      latitude: location.latitude,
+      longitude: location.longitude,
       phone: data.phone,
       startTime: data.startTime,
       endTime: data.endTime,

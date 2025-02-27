@@ -2,7 +2,6 @@
 import { useSearchPlaceStore } from '@/store/useSearchPlace';
 import useGeolocation from './useGeolocation';
 import { SearchPlaceType } from '@/types/map';
-import { useCurrentAddress } from '@/store/useCurrentAddress';
 
 declare global {
   interface Window {
@@ -11,9 +10,8 @@ declare global {
 }
 
 function useKeySearchInput() {
-  const { location } = useGeolocation();
+  const { myLocation } = useGeolocation();
   const { setResultSearchInfo } = useSearchPlaceStore();
-  const { setCurrentAddress } = useCurrentAddress();
 
   const placesSearchCallBack = (data: SearchPlaceType[], status: string) => {
     if (
@@ -44,11 +42,10 @@ function useKeySearchInput() {
     const kakaoSearchService = new window.kakao.maps.services.Places();
     kakaoSearchService.keywordSearch(address, placesSearchCallBack, {
       location: new window.kakao.maps.LatLng(
-        location.latitude,
-        location.longitude,
+        myLocation.latitude,
+        myLocation.longitude,
       ),
     });
-    setCurrentAddress(address);
   }
 
   return { searchAddressToCoordinate };
