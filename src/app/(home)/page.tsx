@@ -1,13 +1,21 @@
 'use client';
 
+import { getDogams } from '@/api/home';
 import Logo from '@/components/common/Logo';
 import { Modal } from '@/components/ui/modal';
+import { Dogam, Dogams } from '@/types/home';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
 const HomePage = () => {
   const [isFishBreadModalOpen, setIsFishBreadModalOpen] = useState(false);
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
+
+  const { data: dogams } = useQuery<Dogams>({
+    queryKey: ['dogams'],
+    queryFn: getDogams,
+  });
 
   return (
     <div className="bg-yellow-gradient h-screen relative">
@@ -19,6 +27,15 @@ const HomePage = () => {
       </p>
 
       <div className="grid grid-cols-4 gap-[10px] px-5">
+        {dogams?.data?.data.map((dogam: Dogam) => (
+          <div
+            key={dogam.bungId}
+            className="rounded-[10px] flex items-center justify-center flex-col gap-2 bg-[#FFF5DF] aspect-square cursor-pointer"
+          >
+            <p className="font-medium text-xs">{dogam.bungName} 붕어빵</p>
+            <Logo size="small" type="empty" />
+          </div>
+        ))}
         {/* 있는거 */}
         <div
           className="rounded-[10px] flex items-center justify-center flex-col gap-2 bg-secondary aspect-square cursor-pointer"
@@ -26,26 +43,6 @@ const HomePage = () => {
         >
           <p className="font-medium text-xs">팥 붕어빵</p>
           <Logo size="small" />
-        </div>
-
-        {/* 붕어빵 상세 모달 */}
-        <Modal
-          isOpen={isFishBreadModalOpen}
-          onOpenChange={setIsFishBreadModalOpen}
-          titleElement={<span className="text-third">붕어빵 이름</span>}
-        >
-          <div className="flex flex-col items-center gap-8">
-            <div className="w-[260px] h-[126px] flex items-center justify-center bg-[#FFEED0] border-solid border-[1px] border-[#FFD285] rounded-lg">
-              <Logo size="medium" />
-            </div>
-            <span className="font-light"># 태그 내용</span>
-          </div>
-        </Modal>
-
-        {/* 없는거 */}
-        <div className="rounded-[10px] flex items-center justify-center flex-col gap-2 bg-[#FFF5DF] aspect-square cursor-pointer">
-          <p className="font-medium text-xs">치즈 붕어빵</p>
-          <Logo size="small" type="empty" />
         </div>
       </div>
 
@@ -57,6 +54,19 @@ const HomePage = () => {
         내 도감 캡쳐하기
       </button>
 
+      {/* 붕어빵 상세 모달 */}
+      <Modal
+        isOpen={isFishBreadModalOpen}
+        onOpenChange={setIsFishBreadModalOpen}
+        titleElement={<span className="text-third">붕어빵 이름</span>}
+      >
+        <div className="flex flex-col items-center gap-8">
+          <div className="w-[260px] h-[126px] flex items-center justify-center bg-[#FFEED0] border-solid border-[1px] border-[#FFD285] rounded-lg">
+            <Logo size="medium" />
+          </div>
+          <span className="font-light"># 태그 내용</span>
+        </div>
+      </Modal>
       {/* 캡쳐 완료 모달 */}
       <Modal
         isOpen={isCaptureModalOpen}
