@@ -1,7 +1,6 @@
 'use client';
 
 import { getUserLogsList, getUserProfile } from '@/api/mypage';
-import NotFound from '@/components/common/NotFound';
 import Profile from '@/components/common/Profile';
 import { Button } from '@/components/ui/button';
 import { UserLogsList, UserLogsListType, UserProfile } from '@/types/mypage';
@@ -61,13 +60,18 @@ const MyPage = () => {
         {logsList?.data?.data?.map((log: UserLogsListType) => (
           <div
             key={log.logId}
-            className="aspect-square bg-[#ddd] rounded-[10px] cursor-pointer"
+            className="aspect-square bg-[#FFEED0] rounded-[10px] cursor-pointer flex justify-center items-center"
             onClick={() => router.push(`/mypage/${log.logId}`)}
           >
             {log.imageUrl ? (
               <Image src={log.imageUrl} alt="로그이미지" />
             ) : (
-              <NotFound title="이미지" />
+              <Image
+                src={'/images/logo.png'}
+                alt="로그이미지"
+                width={50}
+                height={50}
+              />
             )}
           </div>
         ))}
