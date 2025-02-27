@@ -38,11 +38,6 @@ async function searchStores(query: string): Promise<SearchResponse> {
   return response.json();
 }
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
-};
-
 const SearchSection = () => {
   const { mutate: search, isPending } = useMutation({
     mutationFn: searchStores,
