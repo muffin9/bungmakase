@@ -1,27 +1,53 @@
 'use client';
 
+import { getUserLogsList, getUserProfile } from '@/api/mypage';
 import Profile from '@/components/common/Profile';
 import { Button } from '@/components/ui/button';
+import { UserLogsList, UserLogsListType, UserProfile } from '@/types/mypage';
+import { useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const MyPage = () => {
   const router = useRouter();
 
+  const { data: profile } = useQuery<UserProfile>({
+    queryKey: ['profile'],
+    queryFn: getUserProfile,
+  });
+
+  const { data: logsList } = useQuery<UserLogsList>({
+    queryKey: ['logsList'],
+    queryFn: getUserLogsList,
+  });
+
   return (
     <div className="bg-yellow-gradient h-screen pt-[100px] flex flex-col items-center">
-      <Profile size="sm" />
-      <div className="flex flex-col gap-[10px] mb-8">
+      {profile?.data?.data?.imageUrl ? (
+        <div className="w-[89px] h-[89px] relative rounded-full bg-[#F6EEDF] flex justify-center items-center cursor-pointer mb-6">
+          <Image
+            src={profile?.data?.data?.imageUrl}
+            alt="profile"
+            fill
+            objectFit="cover"
+          />
+        </div>
+      ) : (
+        <Profile size="sm" />
+      )}
+      <div className="flex flex-col gap-[10px] mb-8 items-center">
         <div className="flex gap-1">
           <div className="bg-primary rounded-sm p-1 h-fit text-xs text-white">
-            레벨 1
+            레벨 {profile?.data?.data?.level}
           </div>
-          <p className="font-medium text-xl">사용자 닉네임</p>
+          <p className="font-medium text-xl">{profile?.data?.data?.nickname}</p>
         </div>
         <Button
           variant={'secondary'}
           size={'xs'}
           onClick={() => router.push('/mypage/update')}
+          className="w-[133px]"
         >
           프로필 수정하기
         </Button>
@@ -31,21 +57,24 @@ const MyPage = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-[10px] w-full px-5">
-        <div
-          className="aspect-square bg-[#ddd] rounded-[10px] cursor-pointer"
-          onClick={() => router.push('/mypage/1')}
-        >
-          click
-        </div>
-        <div className="aspect-square bg-[#ddd] rounded-[10px] cursor-pointer">
-          contents
-        </div>
-        <div className="aspect-square bg-[#ddd] rounded-[10px] cursor-pointer">
-          contents
-        </div>
-        <div className="aspect-square bg-[#ddd] rounded-[10px] cursor-pointer">
-          contents
-        </div>
+        {logsList?.data?.data?.map((log: UserLogsListType) => (
+          <div
+            key={log.logId}
+            className="aspect-square bg-[#FFEED0] rounded-[10px] cursor-pointer flex justify-center items-center"
+            onClick={() => router.push(`/mypage/${log.logId}`)}
+          >
+            {log.imageUrl ? (
+              <Image src={log.imageUrl} alt="로그이미지" />
+            ) : (
+              <Image
+                src={'/images/logo.png'}
+                alt="로그이미지"
+                width={50}
+                height={50}
+              />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
