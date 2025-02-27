@@ -23,7 +23,7 @@ const FloatingActionButton = () => {
       }
     >
       <div className="flex flex-col gap-4">
-        <div
+        {/* <div
           className="flex items-center gap-4 cursor-pointer"
           onClick={() => router.push('/map/review')}
         >
@@ -40,8 +40,8 @@ const FloatingActionButton = () => {
               이용해 본 붕어빵 가게가 있다면
             </span>
             <span className="text-sm">후기쓰기</span>
-          </div>
-        </div>
+          </div>  
+        </div> */}
 
         <div
           className="flex items-center gap-4 cursor-pointer"

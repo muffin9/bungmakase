@@ -8,17 +8,24 @@ import { useRouter } from 'next/navigation';
 import { useSearchShop } from '@/api/shop/search';
 import { SearchShopInfoType } from '@/types/map';
 import { useRecentSearches } from '@/hooks/useRecentSearches';
+import { useCurrentAddress } from '@/store/useCurrentAddress';
+
 export function SearchForm() {
   const router = useRouter();
   const { value, handleChange } = useSearchValue();
   const { setResultShopSearchInfo } = useSearchShopStore();
   const { data: shopData } = useSearchShop(value);
   const { addRecentSearch } = useRecentSearches();
+  const { setLocation } = useCurrentAddress();
 
   const handleSearch = () => {
     if (value && shopData && shopData.length > 0) {
       addRecentSearch(value);
       setResultShopSearchInfo(shopData);
+      setLocation({
+        latitude: shopData[0].latitude,
+        longitude: shopData[0].longitude,
+      });
       router.push(`/map`);
     }
   };

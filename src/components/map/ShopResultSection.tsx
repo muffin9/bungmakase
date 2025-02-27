@@ -1,3 +1,5 @@
+'use client';
+
 import { useSearchShopStore } from '@/store/useSearchShopStore';
 import { SearchShopInfoType } from '@/types/map';
 import ShopInfo from '../common/ShopInfo';
@@ -5,8 +7,10 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { BottomDrawer } from '@/components/common/BottomDrawer';
+import { useRouter } from 'next/navigation';
 
 export function ShopResultSection() {
+  const router = useRouter();
   const { resultShopSearchInfo } = useSearchShopStore();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -27,7 +31,7 @@ export function ShopResultSection() {
           return (
             <motion.div
               key={item.shopId}
-              onClick={() => alert('서비스 준비중입니다...')}
+              onClick={() => router.push(`/shop/${item.shopId}`)}
             >
               <div className="flex items-center gap-4 cursor-pointer hover:bg-gray-100 rounded-md">
                 <ShopInfo shop={item} />
