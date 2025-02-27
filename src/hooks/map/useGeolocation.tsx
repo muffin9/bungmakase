@@ -2,7 +2,7 @@ import { defaultCoords } from '@/constants/map';
 import { useEffect, useState } from 'react';
 
 function useGeolocation() {
-  const [location, setLocation] = useState({
+  const [myLocation, setMyLocation] = useState({
     latitude: defaultCoords.lat,
     longitude: defaultCoords.lng,
   });
@@ -11,7 +11,7 @@ function useGeolocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLocation({
+          setMyLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           });
@@ -25,7 +25,7 @@ function useGeolocation() {
     }
   }, []);
 
-  return location;
+  return { myLocation, setMyLocation };
 }
 
 export default useGeolocation;
