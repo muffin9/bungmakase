@@ -19,5 +19,5 @@ export function useSearchValue(onSearch?: (value: string) => void) {
 
   const updatedValue = (term: string) => setValue(term);
 
-  return { value, handleChange, updatedValue };
+  return { value, setValue, handleChange, updatedValue };
 }
