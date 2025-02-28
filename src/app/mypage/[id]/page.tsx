@@ -1,7 +1,7 @@
 'use client';
 
 import { getUserLogs } from '@/api/mypage';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -17,9 +17,9 @@ const MypageDetail = () => {
     enabled: !!id,
   });
 
-  const onClickUpdate = () => {
-    router.push(`/mypage/${id}/update`);
-  };
+  // const onClickUpdate = () => {
+  //   router.push(`/mypage/${id}/update`);
+  // };
 
   return (
     <div>
@@ -69,10 +69,10 @@ const MypageDetail = () => {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-20 flex w-full gap-3 px-5 xs:w-[375px]">
+      {/* <div className="absolute bottom-20 flex w-full gap-3 px-5 xs:w-[375px]">
         <Button variant={'outline'}>삭제하기</Button>
         <Button onClick={onClickUpdate}>수정하기</Button>
-      </div>
+      </div> */}
     </div>
   );
 };
