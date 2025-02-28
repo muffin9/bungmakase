@@ -20,7 +20,7 @@ interface ReviewActions {
 const initialState: ReviewState = {
   files: [],
   starRating: 0,
-  bungType: '',
+  bungType: '팥',
   reviewContent: '',
   isLoading: false,
 };

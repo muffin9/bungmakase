@@ -1,7 +1,7 @@
 'use client';
 
 import { bungDogamData } from '@/constants/dummy';
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { LabeledInfoField } from '@/components/common/LabeledInfoField';
 import { Button } from '@/components/ui/button';
 import { BottomDrawer, DrawerClose } from '@/components/common/BottomDrawer';
@@ -15,7 +15,7 @@ function BungTypeSelector({
   currentType,
   onTypeChange,
 }: BungTypeSelectorProps) {
-  // const router = useRouter();
+  const router = useRouter();
 
   return (
     <BottomDrawer
@@ -45,8 +45,7 @@ function BungTypeSelector({
         type="button"
         className="mb-2 bg-[#FFEED0] text-[#FFA914] hover:bg-[#FFEED0]/50 transition-colors w-full"
         onClick={() => {
-          alert('서비스 준비 중입니다....');
-          // router.push('/create')
+          router.push('/create');
         }}
       >
         새 붕어빵 제안하기
