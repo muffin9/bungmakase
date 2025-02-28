@@ -12,9 +12,10 @@ const MypageDetail = () => {
   const router = useRouter();
   const { id } = useParams();
 
-  const { data: logs } = useQuery<UserLogs>({
+  const { data: logs } = useQuery({
     queryKey: ['logs', id],
     queryFn: () => getUserLogs(String(id)),
+    select: (response) => response.data.data ?? ({} as UserLogs),
     enabled: !!id,
   });
 

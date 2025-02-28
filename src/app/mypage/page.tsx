@@ -12,14 +12,16 @@ import React from 'react';
 const MyPage = () => {
   const router = useRouter();
 
-  const { data: profile } = useQuery<UserProfile>({
+  const { data: profile } = useQuery({
     queryKey: ['profile'],
     queryFn: getUserProfile,
+    select: (response) => response.data.data ?? ({} as UserProfile),
   });
 
-  const { data: logsList } = useQuery<UserLogsList>({
+  const { data: logsList } = useQuery({
     queryKey: ['logsList'],
     queryFn: getUserLogsList,
+    select: (response) => response.data.data ?? ({} as UserLogsList),
   });
 
   return (

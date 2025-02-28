@@ -15,19 +15,22 @@ const HomePage = () => {
   const [isOpenDetail, toggleOpenDetail] = useToggle();
   const [isOpenCapture, toggleOpenCapture] = useToggle();
 
-  const { data: dogams } = useQuery<Dogams>({
+  const { data: dogams } = useQuery({
     queryKey: ['dogams'],
     queryFn: getDogams,
+    select: (response) => response.data.data ?? ([] as Dogams),
   });
 
-  const { data: dogamsUser } = useQuery<Dogams>({
+  const { data: dogamsUser } = useQuery({
     queryKey: ['dogamsUser'],
     queryFn: getUserDogams,
+    select: (response) => response.data.data ?? ([] as Dogams),
   });
 
-  const { data: dogamDetail } = useQuery<DogamDetail>({
+  const { data: dogamDetail } = useQuery({
     queryKey: ['dogamDetail', bungId],
     queryFn: () => getUserDogamDetail(bungId),
+    select: (response) => response.data.data ?? ({} as DogamDetail),
     enabled: !!bungId,
   });
 
