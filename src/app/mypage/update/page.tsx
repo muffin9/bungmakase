@@ -9,6 +9,8 @@ import { RiErrorWarningFill } from 'react-icons/ri';
 import React, { useState } from 'react';
 import { useNicknameCheck } from '@/api/user/nickname';
 import { z } from 'zod';
+import { useMutation } from '@tanstack/react-query';
+import { updateUserNickname } from '@/api/mypage';
 
 const nicknameSchema = z
   .string()
@@ -25,6 +27,18 @@ const MypageUpdate = () => {
     onDuplicateCheck: (isDuplicate) => setIsDuplicate(!isDuplicate),
   });
 
+  const updateNicknameMutation = useMutation({
+    mutationKey: ['d'],
+    mutationFn: (nickname: string) => updateUserNickname(nickname),
+    onSuccess: () => {
+      alert('수정되었습니다.');
+      router.back();
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
   const onClickCheckId = () => {
     const result = nicknameSchema.safeParse(selectName);
     if (!result.success) {
@@ -32,6 +46,10 @@ const MypageUpdate = () => {
       return;
     }
     checkNickname(selectName);
+  };
+
+  const onClickUpdateBtn = () => {
+    updateNicknameMutation.mutate(selectName);
   };
 
   return (
@@ -76,7 +94,9 @@ const MypageUpdate = () => {
         </div>
       </div>
       <div className="absolute bottom-20 flex w-full gap-3 px-5 xs:w-[375px]">
-        <Button disabled={!isDuplicate}>완료</Button>
+        <Button disabled={!isDuplicate} onClick={onClickUpdateBtn}>
+          완료
+        </Button>
       </div>
     </div>
   );
