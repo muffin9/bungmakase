@@ -17,5 +17,7 @@ export function useSearchValue(onSearch?: (value: string) => void) {
     [debouncedSearch],
   );
 
-  return { value, setValue, handleChange };
+  const updatedValue = (term: string) => setValue(term);
+
+  return { value, handleChange, updatedValue };
 }

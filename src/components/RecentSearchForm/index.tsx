@@ -1,18 +1,15 @@
 'use client';
 
-import { getSearchResult } from '@/api/shop/search';
 import { useRecentSearches } from '@/hooks/useRecentSearches';
-import { useCurrentAddress } from '@/store/useCurrentAddress';
-import { useSearchShopStore } from '@/store/useSearchShopStore';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
-export function RecentSearchForm() {
-  const router = useRouter();
+interface RecentSearchFormProps {
+  updatedValue: (term: string) => void;
+}
+
+export function RecentSearchForm({ updatedValue }: RecentSearchFormProps) {
   const { recentSearches, removeRecentSearch, clearRecentSearches } =
     useRecentSearches();
-  const { setResultShopSearchInfo } = useSearchShopStore();
-  const { setLocation } = useCurrentAddress();
 
   return (
     <div className="flex flex-col">
@@ -30,15 +27,7 @@ export function RecentSearchForm() {
           <div key={term} className="flex justify-between">
             <p
               className="w-full cursor-pointer"
-              onClick={async () => {
-                const data = await getSearchResult(term);
-                setResultShopSearchInfo(data);
-                setLocation({
-                  latitude: data[0].latitude,
-                  longitude: data[0].longitude,
-                });
-                router.push('/map');
-              }}
+              onClick={() => updatedValue(term)}
             >
               {term}
             </p>

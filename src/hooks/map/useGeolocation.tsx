@@ -2,19 +2,29 @@ import { defaultCoords } from '@/constants/map';
 import { useEffect, useState } from 'react';
 
 function useGeolocation() {
-  const [myLocation, setMyLocation] = useState({
-    latitude: defaultCoords.lat,
-    longitude: defaultCoords.lng,
+  const [myLocation, setMyLocation] = useState(() => {
+    // localStorage에서 저장된 위치가 있는지 확인
+    const savedLocation = localStorage.getItem('userLocation');
+    if (savedLocation) {
+      return JSON.parse(savedLocation);
+    }
+    return {
+      latitude: defaultCoords.lat,
+      longitude: defaultCoords.lng,
+    };
   });
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setMyLocation({
+          const newLocation = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-          });
+          };
+          setMyLocation(newLocation);
+          // 위치 정보를 localStorage에 저장
+          localStorage.setItem('userLocation', JSON.stringify(newLocation));
         },
         (error) => {
           console.error('Error getting geolocation:', error);
@@ -23,7 +33,7 @@ function useGeolocation() {
     } else {
       console.log('Geolocation is not supported by this browser.');
     }
-  }, []);
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   const calculateDistance = (lat: number, lng: number): number => {
     const R = 6371; // 지구의 반경 (km)
