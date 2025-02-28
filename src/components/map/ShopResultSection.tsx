@@ -31,7 +31,11 @@ export function ShopResultSection() {
           return (
             <motion.div
               key={item.shopId}
-              onClick={() => router.push(`/shop/${item.shopId}`)}
+              onClick={() =>
+                router.push(
+                  `/shop/${item.shopId}?latitude=${item.latitude}&longitude=${item.longitude}`,
+                )
+              }
             >
               <div className="flex items-center gap-4 cursor-pointer hover:bg-gray-100 rounded-md">
                 <ShopInfo shop={item} />

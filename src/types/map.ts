@@ -25,18 +25,6 @@ export interface SearchPlaceInfoType {
   distance: string;
 }
 
-export interface MarkerType {
-  shopId: string;
-  address: string;
-  shopName: string;
-  startTime: string;
-  endTime: string;
-  latitude: number;
-  longitude: number;
-  star: number;
-  tastes: string[];
-}
-
 export interface SearchShopInfoType {
   shopId: string;
   shopName: string;
@@ -49,4 +37,31 @@ export interface SearchShopInfoType {
   imageUrl: string;
   tastes: string[];
   distance?: number;
+}
+
+export interface ShopHomeInfoType {
+  shopId: string;
+  shopName: string;
+  address: string;
+  startTime: string;
+  endTime: string;
+  phone: string;
+  tastes: string[];
+  imageUrls: string[];
+}
+
+export interface ShopPhotoType {
+  photoId: string;
+  imageUrl: string;
+  updatedAt: string;
+}
+
+export interface ShopReviewType {
+  reviewId: string;
+  profileImageUrl: string;
+  userLevel: number;
+  nickname: string;
+  bungImages: string[];
+  reviewText: string;
+  reviewTimestamp: string;
 }
