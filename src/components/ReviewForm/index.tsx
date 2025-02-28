@@ -6,6 +6,8 @@ import { useImageUpload } from '@/hooks/useImageUpload';
 import { useReviewStore } from '@/store/useReviewStore';
 import { X } from 'lucide-react';
 import BungTypeSelector from '@/components/common/BungTypeSelector';
+import { useCreateReview } from '@/api/review/create';
+import { useSearchParams } from 'next/navigation';
 
 interface StarRatingProps {
   rating: number;
@@ -51,44 +53,49 @@ function ImageUploadSection({
   onRemove,
 }: ImageUploadSectionProps) {
   return (
-    <div className="w-full flex flex-col items-center mb-8">
-      <div className="w-full min-h-[150px] flex flex-wrap gap-2 justify-center items-center border border-[#d6d6d6] rounded-lg p-4">
-        {files.map((file, index) => (
-          <div key={index} className="relative w-32 h-32">
-            <Image
-              src={URL.createObjectURL(file)}
-              alt={`리뷰 이미지 ${index + 1}`}
-              fill
-              className="rounded-lg object-cover"
-            />
-            <button
-              type="button"
-              onClick={() => onRemove(index)}
-              className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        ))}
-        {files.length < 5 && (
-          <AddImageButton
-            onClick={() => fileInputRef.current?.click()}
-            isUploading={isUploading}
-          />
-        )}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={onImageChange}
-          disabled={isUploading}
-        />
+    <div className="w-full flex flex-col gap-2 items-center mb-8 p-4 border border-[#d6d6d6] rounded-lg">
+      <div className="w-full overflow-x-auto">
+        <div className="flex gap-2 min-w-min">
+          {files.map((file, index) => (
+            <div key={index} className="relative shrink-0 w-[150px] h-[150px]">
+              <Image
+                src={URL.createObjectURL(file)}
+                alt={`리뷰 이미지 ${index + 1}`}
+                className="rounded-lg object-cover"
+                fill
+              />
+              <button
+                type="button"
+                onClick={() => onRemove(index)}
+                className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
+
       <p className="text-xs text-muted-foreground mt-2">
         이미지는 최대 5개까지 업로드할 수 있습니다. ({files.length}/5)
       </p>
+
+      {files.length < 5 && (
+        <AddImageButton
+          onClick={() => fileInputRef.current?.click()}
+          isUploading={isUploading}
+        />
+      )}
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={onImageChange}
+        disabled={isUploading}
+      />
     </div>
   );
 }
@@ -120,6 +127,11 @@ function AddImageButton({ onClick, isUploading }: AddImageButtonProps) {
 }
 
 export function ReviewForm() {
+  const searchParams = useSearchParams();
+  const shopId = searchParams.get('id');
+
+  const { mutate: createReview } = useCreateReview();
+
   const {
     starRating,
     bungType,
@@ -134,15 +146,21 @@ export function ReviewForm() {
   const { fileInputRef, handleImageChange, removeImage, isLoading } =
     useImageUpload();
 
+  const isFormValid = () => {
+    return !!(starRating > 0 && bungType);
+  };
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: API 호출
-    console.log({
-      starRating,
-      bungType,
-      reviewContent,
-      files,
+
+    createReview({
+      shopId: shopId as string,
+      star: starRating,
+      bungName: bungType,
+      reviewText: reviewContent,
+      files: files,
     });
+
     resetReview();
   };
 
@@ -170,7 +188,7 @@ export function ReviewForm() {
       <Button
         type="submit"
         className="mt-[50px] w-full transition-colors"
-        disabled={isLoading}
+        disabled={isLoading || !isFormValid()}
       >
         {isLoading ? '업로드 중...' : '등록하기'}
       </Button>
