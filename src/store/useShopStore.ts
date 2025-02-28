@@ -23,7 +23,7 @@ const initialShopInfo: ShopInfo = {
   startTime: '',
   endTime: '',
   file: [],
-  bungType: '',
+  bungType: '팥',
 };
 
 const useShopStore = create<ShopStore>((set) => ({
