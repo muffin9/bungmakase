@@ -2,7 +2,6 @@
 
 import { getUserLogs } from '@/api/mypage';
 import { Button } from '@/components/ui/button';
-import { UserLogs } from '@/types/mypage';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -15,7 +14,6 @@ const MypageDetail = () => {
   const { data: logs } = useQuery({
     queryKey: ['logs', id],
     queryFn: () => getUserLogs(String(id)),
-    select: (response) => response.data.data ?? ({} as UserLogs),
     enabled: !!id,
   });
 

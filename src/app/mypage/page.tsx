@@ -3,7 +3,7 @@
 import { getUserLogsList, getUserProfile } from '@/api/mypage';
 import Profile from '@/components/common/Profile';
 import { Button } from '@/components/ui/button';
-import { UserLogsList, UserLogsListType, UserProfile } from '@/types/mypage';
+import { UserLogsListType } from '@/types/mypage';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -15,13 +15,11 @@ const MyPage = () => {
   const { data: profile } = useQuery({
     queryKey: ['profile'],
     queryFn: getUserProfile,
-    select: (response) => response.data.data ?? ({} as UserProfile),
   });
 
   const { data: logsList } = useQuery({
     queryKey: ['logsList'],
     queryFn: getUserLogsList,
-    select: (response) => response.data.data ?? ({} as UserLogsList),
   });
 
   return (

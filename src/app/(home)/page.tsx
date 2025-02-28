@@ -4,7 +4,7 @@ import { getDogams, getUserDogamDetail, getUserDogams } from '@/api/home';
 import Logo from '@/components/common/Logo';
 import { Modal } from '@/components/ui/modal';
 import useToggle from '@/hooks/useToggle';
-import { Dogam, DogamDetail, Dogams } from '@/types/home';
+import { Dogam } from '@/types/home';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import React, { useState } from 'react';
@@ -18,19 +18,16 @@ const HomePage = () => {
   const { data: dogams } = useQuery({
     queryKey: ['dogams'],
     queryFn: getDogams,
-    select: (response) => response.data.data ?? ([] as Dogams),
   });
 
   const { data: dogamsUser } = useQuery({
     queryKey: ['dogamsUser'],
     queryFn: getUserDogams,
-    select: (response) => response.data.data ?? ([] as Dogams),
   });
 
   const { data: dogamDetail } = useQuery({
     queryKey: ['dogamDetail', bungId],
     queryFn: () => getUserDogamDetail(bungId),
-    select: (response) => response.data.data ?? ({} as DogamDetail),
     enabled: !!bungId,
   });
 
@@ -53,6 +50,8 @@ const HomePage = () => {
       toggleOpenCapture();
     }, 1000);
   };
+
+  if (!dogams?.data) return;
 
   return (
     <div className="bg-yellow-gradient h-screen relative content-to-capture">
