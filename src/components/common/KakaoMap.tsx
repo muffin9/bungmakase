@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -90,7 +89,14 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         markerRef.current.setMap(null);
       }
     };
-  }, [location.latitude, location.longitude, markersInBounds]);
+  }, [
+    location.latitude,
+    location.longitude,
+    myLocation.latitude,
+    myLocation.longitude,
+    markersInBounds,
+    setResultShopSearchInfo,
+  ]);
 
   const setMyMarker = (latitude: number, longitude: number) => {
     if (markerRef.current) {
