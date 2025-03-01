@@ -16,14 +16,14 @@ export function CreateDogamForm() {
           isEditable
           value={bungName}
           placeholder={'직접 입력하기'}
-          onChange={(value) => setBungName(value)}
+          onChange={(value) => setBungName(value as string)}
         />
         <LabeledInfoField
           label="붕어빵 특징"
           isEditable
           value={tags}
           placeholder={'# 직접 입력하기'}
-          onChange={(value) => setTags(value)}
+          onChange={(value) => setTags(value as string)}
         />
       </div>
       <Button
