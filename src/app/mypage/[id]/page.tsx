@@ -1,7 +1,7 @@
 'use client';
 
 import { getUserLogs } from '@/api/mypage';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -17,9 +17,9 @@ const MypageDetail = () => {
     enabled: !!id,
   });
 
-  const onClickUpdate = () => {
-    router.push(`/mypage/${id}/update`);
-  };
+  // const onClickUpdate = () => {
+  //   router.push(`/mypage/${id}/update`);
+  // };
 
   return (
     <div>
@@ -34,7 +34,7 @@ const MypageDetail = () => {
         />
         <p className="font-medium text-center">나의 붕어빵 기록</p>
       </div>
-      <div className="bg-[#FFEED0] absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 w-[calc(100%-40px)] xs:w-[335px] rounded-3xl shadow-[1px_1px_10px_0px_rgba(0,0,0,.25)] p-9">
+      <div className="bg-[#FFEED0] bg-[url('/images/profile-background.png')] bg-no-repeat bg-cover absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 w-[calc(100%-40px)] xs:w-[335px] rounded-3xl shadow-[1px_1px_10px_0px_rgba(0,0,0,.25)] p-9">
         <p className="text-center font-medium text-2xl mb-7">
           {logs?.data?.data?.bungName} 붕어빵
         </p>
@@ -69,10 +69,10 @@ const MypageDetail = () => {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-20 flex w-full gap-3 px-5 xs:w-[375px]">
+      {/* <div className="absolute bottom-20 flex w-full gap-3 px-5 xs:w-[375px]">
         <Button variant={'outline'}>삭제하기</Button>
         <Button onClick={onClickUpdate}>수정하기</Button>
-      </div>
+      </div> */}
     </div>
   );
 };
