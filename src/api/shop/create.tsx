@@ -1,7 +1,7 @@
 import { useModalStore } from '@/hooks/useModalStore';
 import { useCurrentAddress } from '@/store/useCurrentAddress';
 import useShopStore from '@/store/useShopStore';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
@@ -50,6 +50,7 @@ export function useCreateShop() {
   const router = useRouter();
   const { resetShopInfo } = useShopStore();
   const { resetLocation } = useCurrentAddress();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createShop,
@@ -60,6 +61,7 @@ export function useCreateShop() {
           description: '붕어빵 가게를 추가했어요.',
           type: 'success',
         });
+        queryClient.invalidateQueries({ queryKey: ['markers'] });
         router.push('/map');
       } else if (data.code === 400) {
         openModal({

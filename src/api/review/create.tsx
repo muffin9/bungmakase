@@ -28,7 +28,7 @@ async function createReview(data: CreateReviewData) {
   formData.append('reviewData', reviewDataBlob);
 
   for (const file of data.files) {
-    formData.append('files', file);
+    formData.append('image', file);
   }
 
   const response = await auth.post(
@@ -52,7 +52,8 @@ export function useCreateReview() {
           description: '리뷰를 작성했어요.',
           type: 'success',
         });
-        router.push(`/map`);
+        const shopId = data.data.shopId;
+        router.push(`/map/shop/${shopId}`);
       } else if (data.code === 400) {
         openModal({
           title: '실패',
