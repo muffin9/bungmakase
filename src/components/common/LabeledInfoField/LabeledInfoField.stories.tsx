@@ -68,7 +68,7 @@ export const Editable: Story = {
         label="영업시간"
         value={value}
         isEditable={true}
-        onChange={setValue}
+        onChange={(newValue) => setValue(newValue.toString())}
         placeholder="영업시간을 입력하세요"
       />
     );
@@ -111,7 +111,7 @@ export const Various: Story = {
           label="편집 가능"
           value={value1}
           isEditable={true}
-          onChange={setValue1}
+          onChange={(newValue) => setValue1(newValue.toString())}
           placeholder="시간을 입력하세요"
         />
         <LabeledInfoField
@@ -124,7 +124,7 @@ export const Various: Story = {
           label="빈 값"
           value={value2}
           isEditable={true}
-          onChange={setValue2}
+          onChange={(newValue) => setValue2(newValue.toString())}
           placeholder="값을 입력하세요"
         />
       </div>

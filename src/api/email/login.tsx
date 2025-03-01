@@ -91,7 +91,7 @@ export function useEmailLogin() {
     onError: () => {
       openModal({
         title: '로그인 실패',
-        description: '아이디 또는 비밀번호를 확인해주세요.',
+        description: '로그인 중 오류가 발생했습니다.',
         type: 'error',
       });
       console.error('로그인 중 오류가 발생했습니다.');
