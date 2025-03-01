@@ -1,12 +1,13 @@
 'use client';
 
-import { bungDogamData } from '@/constants/dummy';
 import { LabeledInfoField } from '@/components/common/LabeledInfoField';
 import { Button } from '@/components/ui/button';
 import { BottomDrawer, DrawerClose } from '@/components/common/BottomDrawer';
 import { Modal } from '@/components/ui/modal';
 import { CreateDogamForm } from '@/components/CreateDogamForm';
 import { useState } from 'react';
+import { useGetDogams } from '@/api/dogam';
+import { Dogam } from '@/types/home';
 
 interface BungTypeSelectorProps {
   currentType: string;
@@ -18,6 +19,7 @@ function BungTypeSelector({
   onTypeChange,
 }: BungTypeSelectorProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data: dogams } = useGetDogams();
 
   return (
     <BottomDrawer
@@ -31,17 +33,18 @@ function BungTypeSelector({
       }
     >
       <div className="flex flex-wrap gap-[5px] mb-4">
-        {bungDogamData.map((dogam) => (
-          <div
-            key={dogam.id}
-            className={`${
-              currentType === dogam.name && 'bg-[#FFA914] text-white'
-            } p-3 text-sm rounded-full border border-[#d8d8d8] cursor-pointer hover:bg-gray-50 transition-colors`}
-            onClick={() => onTypeChange(dogam.name)}
-          >
-            {dogam.name}
-          </div>
-        ))}
+        {dogams &&
+          dogams?.map((dogam: Dogam) => (
+            <div
+              key={dogam.bungId}
+              className={`${
+                currentType === dogam.bungName && 'bg-[#FFA914] text-white'
+              } p-3 text-sm rounded-full border border-[#d8d8d8] cursor-pointer hover:bg-gray-50 transition-colors`}
+              onClick={() => onTypeChange(dogam.bungName)}
+            >
+              {dogam.bungName}
+            </div>
+          ))}
       </div>
       <Button
         type="button"
