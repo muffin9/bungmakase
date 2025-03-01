@@ -8,10 +8,7 @@ const FloatingActionButton = () => {
   return (
     <BottomDrawer
       triggerElement={
-        <Button
-          className="rounded-full text-sm"
-          onClick={() => console.log('가게후기, 추가하기 Up Bottom Sheet')}
-        >
+        <Button className="rounded-full text-sm">
           <Image
             src={'/images/svg/plus.svg'}
             alt="plus image button"

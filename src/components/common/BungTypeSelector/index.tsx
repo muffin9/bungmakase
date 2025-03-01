@@ -6,8 +6,10 @@ import { BottomDrawer, DrawerClose } from '@/components/common/BottomDrawer';
 import { Modal } from '@/components/ui/modal';
 import { CreateDogamForm } from '@/components/CreateDogamForm';
 import { useState } from 'react';
-import { useGetDogams } from '@/api/dogam';
 import { Dogam } from '@/types/home';
+import LoadingSpinner from '../LoadingSpinner';
+import { useQuery } from '@tanstack/react-query';
+import { getDogams } from '@/api/home';
 
 interface BungTypeSelectorProps {
   currentType: string;
@@ -19,7 +21,14 @@ function BungTypeSelector({
   onTypeChange,
 }: BungTypeSelectorProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: dogams } = useGetDogams();
+  const { data: dogams, isLoading } = useQuery({
+    queryKey: ['dogams'],
+    queryFn: getDogams,
+  });
+
+  if (isLoading) {
+    return <LoadingSpinner text="붕어빵 종류를 불러오고 있어요..." />;
+  }
 
   return (
     <BottomDrawer
@@ -34,7 +43,7 @@ function BungTypeSelector({
     >
       <div className="flex flex-wrap gap-[5px] mb-4">
         {dogams &&
-          dogams?.map((dogam: Dogam) => (
+          dogams?.data?.data.map((dogam: Dogam) => (
             <div
               key={dogam.bungId}
               className={`${
