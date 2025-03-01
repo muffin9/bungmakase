@@ -1,7 +1,7 @@
 import { useModalStore } from '@/hooks/useModalStore';
 import auth from '@/api/auth';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface CreateLevelData {
   bungCount: number;
@@ -26,7 +26,7 @@ async function createLevel(data: CreateLevelData) {
   formData.append('bungLogData', levelDataBlob);
 
   for (const file of data.files) {
-    formData.append('files', file);
+    formData.append('image', file);
   }
 
   const response = await auth.post(
@@ -40,6 +40,7 @@ async function createLevel(data: CreateLevelData) {
 export function useCreateLevel() {
   const { openModal } = useModalStore();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createLevel,
@@ -50,6 +51,7 @@ export function useCreateLevel() {
           description: '붕어빵 기록을 추가했어요.',
           type: 'success',
         });
+        queryClient.invalidateQueries({ queryKey: ['dogams'] });
         router.push('/level');
       } else if (data.code === 400) {
         openModal({
