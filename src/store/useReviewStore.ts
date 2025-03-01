@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 
 interface ReviewState {
-  files: File[];
   starRating: number;
   bungType: string;
   reviewContent: string;
@@ -9,7 +8,6 @@ interface ReviewState {
 }
 
 interface ReviewActions {
-  setFiles: (files: File[]) => void;
   setStarRating: (rating: number) => void;
   setBungType: (type: string) => void;
   setReviewContent: (content: string) => void;
@@ -18,7 +16,6 @@ interface ReviewActions {
 }
 
 const initialState: ReviewState = {
-  files: [],
   starRating: 0,
   bungType: '팥',
   reviewContent: '',
@@ -27,7 +24,6 @@ const initialState: ReviewState = {
 
 export const useReviewStore = create<ReviewState & ReviewActions>((set) => ({
   ...initialState,
-  setFiles: (files) => set({ files }),
   setStarRating: (starRating) => set({ starRating }),
   setBungType: (bungType) => set({ bungType }),
   setReviewContent: (reviewContent) => set({ reviewContent }),

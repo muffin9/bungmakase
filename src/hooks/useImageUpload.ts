@@ -1,11 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
-import { useReviewStore } from '@/store/useReviewStore';
+import { useRef, useState } from 'react';
 
 export const useImageUpload = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { files, setFiles, setLoading, isLoading } = useReviewStore();
+  const [files, setFiles] = useState<File[]>([]);
+  const [isLoading, setLoading] = useState(false);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(e.target.files || []);

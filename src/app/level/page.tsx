@@ -1,7 +1,10 @@
+import { LevelHome } from '@/components/level/LevelHome';
 import React from 'react';
 
-const LevelPage = () => {
-  return <div>LevelPage</div>;
-};
-
-export default LevelPage;
+export default function LevelPage() {
+  return (
+    <div className="bg-yellow-gradient h-screen pt-[100px] flex flex-col items-center">
+      <LevelHome />
+    </div>
+  );
+}
