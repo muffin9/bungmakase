@@ -5,6 +5,7 @@ import useKeySearchInput from '@/hooks/map/useKeySearchInput';
 import { AddressResultList } from './AddressResultList';
 
 export function AddressForm() {
+  // TODO: map/shop search value와 연결필요
   const { searchAddressToCoordinate } = useKeySearchInput();
 
   return (
