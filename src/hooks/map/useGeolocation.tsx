@@ -1,10 +1,11 @@
 import { defaultCoords } from '@/constants/map';
+import { storage } from '@/lib/storage';
 import { useEffect, useState } from 'react';
 
 function useGeolocation() {
   const [myLocation, setMyLocation] = useState(() => {
     // localStorage에서 저장된 위치가 있는지 확인
-    const savedLocation = localStorage.getItem('userLocation');
+    const savedLocation = storage.get('userLocation');
     if (savedLocation) {
       return JSON.parse(savedLocation);
     }
@@ -24,7 +25,7 @@ function useGeolocation() {
           };
           setMyLocation(newLocation);
           // 위치 정보를 localStorage에 저장
-          localStorage.setItem('userLocation', JSON.stringify(newLocation));
+          storage.set('userLocation', JSON.stringify(newLocation));
         },
         (error) => {
           console.error('Error getting geolocation:', error);

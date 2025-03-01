@@ -7,14 +7,14 @@ export interface Store {
   businessHours: string;
   rating: number;
   type: string;
-  distance: string;
+  distance: number;
 }
 
 export const storeData: SearchShopInfoType[] = [
   {
     shopId: '1',
     shopName: '붕어빵 가게 이름',
-    // imageUrl: '/images/sample_store.jpg',
+    imageUrl: '/images/sample_store.jpg',
     startTime: '01:00',
     endTime: '12:00',
     address: '서울특별시 강남구 테헤란로 14길 6 남도빌딩 2층',
@@ -22,12 +22,12 @@ export const storeData: SearchShopInfoType[] = [
     longitude: 126.868346,
     star: 5,
     tastes: ['팥', '슈크림', '호두'],
-    // distance: '현재 위치로부터 거리',
+    distance: 1.2,
   },
   {
     shopId: '2',
     shopName: '붕어빵 가게 이름',
-    // imageUrl: '/images/sample_store.jpg',
+    imageUrl: '/images/sample_store.jpg',
     startTime: '01:00',
     endTime: '12:00',
     address: '망원',
@@ -35,7 +35,7 @@ export const storeData: SearchShopInfoType[] = [
     longitude: 126.868346,
     star: 4,
     tastes: ['팥', '슈크림'],
-    // distance: '현재 위치로부터 거리',
+    distance: 1.2,
   },
 ];
 
