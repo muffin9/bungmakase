@@ -1,12 +1,10 @@
 'use client';
 
-import { LabeledInfoField } from '../common/LabeledInfoField';
-import { Button } from '../ui/button';
-import { useRouter } from 'next/navigation';
+import { LabeledInfoField } from '@/components/common/LabeledInfoField';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 export function CreateDogamForm() {
-  const router = useRouter();
   const [bungName, setBungName] = useState('');
   const [tags, setTags] = useState('');
 
@@ -33,7 +31,6 @@ export function CreateDogamForm() {
         onClick={() => {
           // TODO: Create Dogam CALL API
           // /level/suggest
-          router.back();
         }}
       >
         등록하기
