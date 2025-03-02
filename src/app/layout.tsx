@@ -8,7 +8,10 @@ import KakaoScript from '@/hooks/map/useKakaoScript';
 
 export const metadata: Metadata = {
   title: '붕마카세',
-  description: '붕마카세 Description',
+  description: '나만의 붕어빵 아카이브',
+  icons: {
+    icon: '/images/favicon.ico',
+  },
 };
 
 export default function RootLayout({
