@@ -54,7 +54,7 @@ export function ReviewForm() {
   } = useReviewStore();
 
   const { files, fileInputRef, handleImageChange, removeImage, isLoading } =
-    useImageUpload();
+    useImageUpload({ multiple: true });
 
   const isFormValid = () => {
     return !!(starRating > 0 && bungType);
