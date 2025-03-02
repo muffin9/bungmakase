@@ -7,13 +7,16 @@ import useToggle from '@/hooks/useToggle';
 import { Dogam } from '@/types/home';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
+import { useRouter } from 'next/navigation';
 
 const HomePage = () => {
+  const router = useRouter();
   const [bungId, setSelectId] = useState(0);
   const [isOpenDetail, toggleOpenDetail] = useToggle();
   const [isOpenCapture, toggleOpenCapture] = useToggle();
+  const isOnboarding = localStorage.getItem('isOnboard');
 
   const { data: dogams } = useQuery({
     queryKey: ['dogams'],
@@ -50,6 +53,12 @@ const HomePage = () => {
       toggleOpenCapture();
     }, 1000);
   };
+
+  useEffect(() => {
+    if (!isOnboarding) {
+      router.push('/onboarding');
+    }
+  }, [isOnboarding]);
 
   if (!dogams?.data) return;
 

@@ -77,3 +77,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.swiper-pagination-bullet-active {
+  background-color: #ffa514 !important;
+  padding: 0 10px;
+  border-radius: 8px !important;
+}
