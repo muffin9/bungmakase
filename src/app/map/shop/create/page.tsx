@@ -16,7 +16,9 @@ export default function MapShopCreatePage() {
           </h1>
         </div>
       </header>
-      <CreateForm />
+      <div className="h-screen w-full">
+        <CreateForm />
+      </div>
     </section>
   );
 }

@@ -141,10 +141,7 @@ function CreateForm() {
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="flex flex-col h-[calc(100vh-200px)] gap-4 mt-4"
-    >
+    <form onSubmit={onSubmit} className="flex flex-col gap-4 mt-4">
       <BaseInput
         id="name"
         label="가게 이름"
