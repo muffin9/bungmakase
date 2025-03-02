@@ -14,9 +14,9 @@ import { useRouter } from 'next/navigation';
 const HomePage = () => {
   const router = useRouter();
   const [bungId, setSelectId] = useState(0);
+  const [isOnboarding] = useState();
   const [isOpenDetail, toggleOpenDetail] = useToggle();
   const [isOpenCapture, toggleOpenCapture] = useToggle();
-  const isOnboarding = localStorage.getItem('isOnboard');
 
   const { data: dogams } = useQuery({
     queryKey: ['dogams'],
@@ -55,7 +55,8 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    if (!isOnboarding) {
+    const localIsOnboard = localStorage.getItem('isOnboard');
+    if (!localIsOnboard) {
       router.push('/onboarding');
     }
   }, [isOnboarding]);
