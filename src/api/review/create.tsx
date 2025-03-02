@@ -1,6 +1,6 @@
 import auth from '@/api/auth';
 import { useModalStore } from '@/hooks/useModalStore';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 interface CreateReviewData {
@@ -41,6 +41,7 @@ async function createReview(data: CreateReviewData) {
 
 export function useCreateReview() {
   const { openModal } = useModalStore();
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   return useMutation({
@@ -53,7 +54,15 @@ export function useCreateReview() {
           type: 'success',
         });
         const shopId = data.data.shopId;
-        router.push(`/map/shop/${shopId}`);
+
+        queryClient.invalidateQueries({
+          queryKey: ['shopReviews', shopId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['shopPhotos', shopId],
+        });
+
+        router.push(`/shop/${shopId}`);
       } else if (data.code === 400) {
         openModal({
           title: '실패',

@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 import ReBoundButton from '../map/ReBoundButton';
 import useGeolocation from '@/hooks/map/useGeolocation';
 import { useCurrentAddress } from '@/store/useCurrentAddress';
-import { useGetMarkersInBounds } from '@/api/map/marker';
+import { useGetMarkers } from '@/api/map/marker';
 import { SearchShopInfoType } from '@/types/map';
 import { useSearchShopStore } from '@/store/useSearchShopStore';
 
@@ -27,10 +27,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
   const { myLocation } = useGeolocation();
   const { setResultShopSearchInfo } = useSearchShopStore();
 
-  const { data: markersInBounds } = useGetMarkersInBounds({
-    sw: { lat: location.latitude - 0.1, lng: location.longitude - 0.1 },
-    ne: { lat: location.latitude + 0.1, lng: location.longitude + 0.1 },
-  });
+  const { data: markers } = useGetMarkers();
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -60,8 +57,8 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
           bungMarkerSize,
         );
 
-        if (window.kakao.maps && markersInBounds) {
-          markersInBounds.forEach((markerData: SearchShopInfoType) => {
+        if (window.kakao.maps && markers) {
+          markers.forEach((markerData: SearchShopInfoType) => {
             const marker = new window.kakao.maps.Marker({
               map: map,
               position: new window.kakao.maps.LatLng(
@@ -87,6 +84,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
     return () => {
       if (markerRef.current) {
         markerRef.current.setMap(null);
+        setResultShopSearchInfo([]);
       }
     };
   }, [
@@ -94,7 +92,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
     location.longitude,
     myLocation.latitude,
     myLocation.longitude,
-    markersInBounds,
+    markers,
     setResultShopSearchInfo,
   ]);
 

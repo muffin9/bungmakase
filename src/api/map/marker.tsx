@@ -15,6 +15,13 @@ export const getMarkers = async () => {
   return [];
 };
 
+export function useGetMarkers() {
+  return useQuery({
+    queryKey: ['markers'],
+    queryFn: getMarkers,
+  });
+}
+
 // 특정 지역의 마커만 가져오는 쿼리
 export function useGetMarkersInBounds(bounds: {
   sw: { lat: number; lng: number };

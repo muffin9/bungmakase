@@ -36,6 +36,7 @@ async function createShop(data: CreateShopData) {
   });
 
   formData.append('shopData', shopDataBlob);
+  formData.append('image', data.file);
 
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/map/shops`,

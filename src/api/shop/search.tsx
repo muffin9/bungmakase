@@ -14,6 +14,17 @@ export const getSearchResult = async (shopName: string) => {
   return [];
 };
 
+export const getSearchOneResult = async (shopId: string) => {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/map/markers/search?shopId=${shopId}`,
+  );
+  if (response.status === 200) {
+    return response.data.data[0];
+  }
+
+  return [];
+};
+
 export function useSearchShop(shopName: string) {
   const { calculateDistance } = useGeolocation();
 
