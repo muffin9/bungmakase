@@ -12,7 +12,7 @@ export default function LevelCreatePage() {
         <div className="mr-8" />
       </header>
       <Separator />
-      <div className="w-full pt-6 px-4">
+      <div className="h-screen w-full pt-6 px-4">
         <LevelForm />
       </div>
     </section>

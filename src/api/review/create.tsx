@@ -28,12 +28,17 @@ async function createReview(data: CreateReviewData) {
   formData.append('reviewData', reviewDataBlob);
 
   for (const file of data.files) {
-    formData.append('image', file);
+    formData.append('image', file, file.name);
   }
 
   const response = await auth.post(
     `${process.env.NEXT_PUBLIC_API_URL}/map/reviews`,
     formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
   );
 
   return response.data;

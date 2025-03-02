@@ -1,9 +1,10 @@
 'use client';
 
 import { getUserLogsList, getUserProfile } from '@/api/mypage';
-import { useLogout } from '@/api/user/logout';
+
 import Profile from '@/components/common/Profile';
 import { Button } from '@/components/ui/button';
+import { removeAccessToken } from '@/lib/cookie';
 import { UserLogsListType } from '@/types/mypage';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
@@ -22,8 +23,6 @@ const MyPage = () => {
     queryKey: ['logsList'],
     queryFn: getUserLogsList,
   });
-
-  const { mutate: logout } = useLogout();
 
   return (
     <div className="bg-yellow-gradient h-screen pt-[100px] flex flex-col items-center">
@@ -58,7 +57,10 @@ const MyPage = () => {
           variant={'outline'}
           size={'xs'}
           className="w-[80px]"
-          onClick={() => logout()}
+          onClick={() => {
+            removeAccessToken();
+            router.push('/login');
+          }}
         >
           로그 아웃
         </Button>

@@ -26,7 +26,7 @@ async function createLevel(data: CreateLevelData) {
   formData.append('bungLogData', levelDataBlob);
 
   for (const file of data.files) {
-    formData.append('image', file);
+    formData.append('image', file, file.name);
   }
 
   const response = await auth.post(
