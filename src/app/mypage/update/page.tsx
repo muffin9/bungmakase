@@ -1,16 +1,18 @@
 'use client';
 
-import Profile from '@/components/common/Profile';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import React, { useState } from 'react';
 import { useNicknameCheck } from '@/api/user/nickname';
 import { z } from 'zod';
-import { useMutation } from '@tanstack/react-query';
-import { updateUserNickname } from '@/api/mypage';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getUserProfile, updateUserNickname } from '@/api/mypage';
+import { useModalStore } from '@/hooks/useModalStore';
+import BackButton from '@/components/common/BackButton';
+import { useImageUpload } from '@/hooks/useImageUpload';
+import Image from 'next/image';
 
 const nicknameSchema = z
   .string()
@@ -22,20 +24,44 @@ const MypageUpdate = () => {
   const router = useRouter();
   const [selectName, setSelectName] = useState('');
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const { openModal } = useModalStore();
+  const queryClient = useQueryClient();
+
+  const {
+    files,
+    fileInputRef,
+    handleImageChange,
+    isLoading: fileLoading,
+  } = useImageUpload();
 
   const { mutate: checkNickname } = useNicknameCheck({
     onDuplicateCheck: (isDuplicate) => setIsDuplicate(!isDuplicate),
   });
 
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getUserProfile,
+  });
+
   const updateNicknameMutation = useMutation({
-    mutationKey: ['d'],
-    mutationFn: (nickname: string) => updateUserNickname(nickname),
+    mutationKey: ['updateNickname'],
+    mutationFn: (nickname: string) => updateUserNickname(nickname, files[0]),
     onSuccess: () => {
-      alert('수정되었습니다.');
+      openModal({
+        title: '수정되었습니다.',
+        description: '수정되었습니다.',
+        type: 'success',
+      });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
       router.back();
     },
     onError: (error) => {
       console.error(error);
+      openModal({
+        title: '오류',
+        description: '알 수 없는 오류가 발생했습니다.',
+        type: 'error',
+      });
     },
   });
 
@@ -53,16 +79,9 @@ const MypageUpdate = () => {
   };
 
   return (
-    <div className="bg-yellow-gradient h-screen relative">
-      <div className="pt-10 h-20 w-full relative">
-        <Image
-          src="/images/svg/arrow-left.svg"
-          alt="뒤로가기"
-          width={10}
-          height={17}
-          className="cursor-pointer absolute left-6"
-          onClick={() => router.back()}
-        />
+    <div className="bg-yellow-gradient h-screen relative py-8">
+      <div className="w-full relative mb-2 ml-5">
+        <BackButton />
       </div>
       <div>
         <p className="text-xl font-medium px-6 mb-24">
@@ -71,7 +90,52 @@ const MypageUpdate = () => {
           작성해주세요 &#58;&#41;
         </p>
         <div className="w-full flex justify-center mb-14">
-          <Profile />
+          <div
+            className="w-[157px] h-[157px] relative rounded-full bg-primary/10 border border-primary flex justify-center items-center cursor-pointer mb-6"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {files[0] ? (
+              <div className="w-[89px] h-[89px] relative rounded-full bg-[#F6EEDF] flex justify-center items-center cursor-pointer mb-6">
+                <Image
+                  src={
+                    files[0]
+                      ? URL.createObjectURL(files[0])
+                      : '/images/logo.png'
+                  }
+                  alt="profile"
+                  width={89}
+                  height={89}
+                  className="rounded-full"
+                />
+              </div>
+            ) : (
+              <Image
+                src={profile?.data?.data?.imageUrl || '/images/logo.png'}
+                width={89}
+                height={89}
+                alt="사진"
+                className="rounded-full"
+              />
+            )}
+
+            <div className="rounded-full w-14 h-14 flex items-center justify-center bg-primary absolute bottom-0 right-0">
+              <Image
+                src={'/images/svg/photo.svg'}
+                alt="사진"
+                width={30}
+                height={30}
+              />
+            </div>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={handleImageChange}
+            disabled={fileLoading}
+          />
         </div>
         <div className="px-6">
           <p className="mb-2">닉네임</p>

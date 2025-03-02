@@ -1,17 +1,15 @@
 import { useModalStore } from '@/hooks/useModalStore';
+import { removeAccessToken } from '@/lib/cookie';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import auth from '@/api/auth';
 
 async function logout() {
-  const response = await fetch(
+  const response = await auth.post(
     `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-    {
-      method: 'POST',
-      cache: 'no-store',
-      credentials: 'include',
-    },
   );
-  return response.json();
+
+  return response.data.data;
 }
 
 export function useLogout() {
@@ -21,6 +19,7 @@ export function useLogout() {
     mutationFn: () => logout(),
     onSuccess: (data) => {
       if (data.code === 200) {
+        removeAccessToken();
         router.push('/login');
       }
     },

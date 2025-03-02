@@ -22,7 +22,7 @@ export function LevelForm() {
   });
 
   const { files, isLoading, fileInputRef, handleImageChange, removeImage } =
-    useImageUpload();
+    useImageUpload({ multiple: true });
 
   const { mutate: createLevel } = useCreateLevel();
 
