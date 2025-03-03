@@ -5,19 +5,28 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [isOnboarding] = useState();
   const loginWithKakao = async () => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}&response_type=code`;
     window.location.href = kakaoAuthUrl;
   };
 
+  useEffect(() => {
+    const localIsOnboard = localStorage.getItem('isOnboard');
+    if (!localIsOnboard) {
+      router.push('/onboarding');
+    }
+  }, [isOnboarding]);
+
   return (
     <div className="h-screen bg-yellow-gradient px-6 py-8">
       <div className="h-full flex flex-col items-center justify-between">
         <header className="text-center">
-          <p className="text-third text-sm">나만의 붕어빵 아카라이브</p>
+          <p className="text-third text-sm">나만의 붕어빵 아카이브</p>
           <span className="text-[80px] text-third font-OwnglyphPDH">
             붕마카세
           </span>
