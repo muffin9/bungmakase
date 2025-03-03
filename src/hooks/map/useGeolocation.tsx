@@ -16,25 +16,56 @@ function useGeolocation() {
   });
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newLocation = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          };
-          setMyLocation(newLocation);
-          // 위치 정보를 localStorage에 저장
-          storage.set('userLocation', JSON.stringify(newLocation));
-        },
-        (error) => {
-          console.error('Error getting geolocation:', error);
-        },
-      );
-    } else {
+    if (!navigator.geolocation) {
       console.log('Geolocation is not supported by this browser.');
+      return;
     }
-  }, []); // 컴포넌트 마운트 시 한 번만 실행
+
+    // 위치 정확도를 높이기 위한 옵션 추가
+    const options = {
+      enableHighAccuracy: true, // 높은 정확도 모드 활성화
+      maximumAge: 30000, // 30초 이내의 캐시된 위치만 사용
+      timeout: 27000, // 27초 이내에 응답이 없으면 타임아웃
+    };
+
+    // 지속적인 위치 업데이트를 위한 watch 함수
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const newLocation = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy, // 정확도 정보 추가
+          timestamp: position.timestamp, // 타임스탬프 추가
+        };
+
+        // 정확도가 100m 이내일 때만 위치 업데이트
+        if (position.coords.accuracy <= 100) {
+          setMyLocation(newLocation);
+          storage.set('userLocation', JSON.stringify(newLocation));
+        }
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            console.error('User denied the request for Geolocation.');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            console.error('Location information is unavailable.');
+            break;
+          case error.TIMEOUT:
+            console.error('The request to get user location timed out.');
+            break;
+        }
+      },
+      options,
+    );
+
+    // 컴포넌트 언마운트 시 위치 감시 중지
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, []);
 
   const calculateDistance = (lat: number, lng: number): number => {
     const R = 6371; // 지구의 반경 (km)
