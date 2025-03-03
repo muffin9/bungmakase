@@ -9,6 +9,7 @@ import { getSearchOneResult, useSearchShop } from '@/api/shop/search';
 import { SearchShopInfoType } from '@/types/map';
 import { useRecentSearches } from '@/hooks/useRecentSearches';
 import { useCurrentAddress } from '@/store/useCurrentAddress';
+import useGeolocation from '@/hooks/map/useGeolocation';
 
 export function SearchForm() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export function SearchForm() {
   const { data: shopData } = useSearchShop(value);
   const { addRecentSearch } = useRecentSearches();
   const { setLocation } = useCurrentAddress();
+  const { calculateDistance } = useGeolocation();
 
   const handleSearch = () => {
     if (value && shopData && shopData.length > 0) {
@@ -33,7 +35,8 @@ export function SearchForm() {
   const handleOneSearch = async (shopId: string, shopName: string) => {
     addRecentSearch(shopName);
     const shopData = await getSearchOneResult(shopId);
-    setResultShopSearchInfo([shopData]);
+    const distance = calculateDistance(shopData.latitude, shopData.longitude);
+    setResultShopSearchInfo([{ ...shopData, distance }]);
     setLocation({
       latitude: shopData.latitude,
       longitude: shopData.longitude,

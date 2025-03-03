@@ -77,7 +77,12 @@ const MyPage = () => {
             onClick={() => router.push(`/mypage/${log.logId}`)}
           >
             {log.imageUrl ? (
-              <Image src={log.imageUrl} alt="로그이미지" />
+              <Image
+                width={50}
+                height={50}
+                src={log.imageUrl}
+                alt="로그이미지"
+              />
             ) : (
               <Image
                 src={'/images/logo.png'}
