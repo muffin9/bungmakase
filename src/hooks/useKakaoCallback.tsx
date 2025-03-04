@@ -24,9 +24,8 @@ export default function KakaoCallback() {
         if (response.data.data) {
           const token = response.data.data.token;
           setEncryptedAccessToken(token);
+          router.push('/');
         }
-
-        router.push('/');
       } catch (error) {
         console.error('Login error:', error);
         router.push('/error');
