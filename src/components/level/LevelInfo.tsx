@@ -56,11 +56,11 @@ export function LevelInfo() {
                     key={item.level}
                     className="px-[10px] mb-[10px] py-[14px] bg-[#FFEED0] rounded-[20px] flex flex-col items-center gap-2"
                   >
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-3">
                       <div className="bg-primary text-white text-sm rounded-[5px] p-[5px] font-medium">
                         레벨 {item.level}
                       </div>
-                      <div className="min-w-[100px] text-center font-medium text-sm">
+                      <div className="min-w-[80px] text-center font-medium text-sm">
                         {item.name}
                       </div>
                     </div>
