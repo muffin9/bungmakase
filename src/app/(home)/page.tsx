@@ -42,13 +42,31 @@ const HomePage = () => {
   // 캡처된 화면을 이미지로 변환하여 다운로드 링크 생성
   const onClickCaptureBtn = () => {
     const element = document.body;
+
     html2canvas(element).then((canvas) => {
-      const imgData = canvas.toDataURL();
-      const link = document.createElement('a');
-      link.href = imgData;
-      link.download = 'screenshot.png';
-      link.click();
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'screenshot.png';
+
+        if (
+          navigator.userAgent.includes('iPhone') ||
+          navigator.userAgent.includes('iPad')
+        ) {
+          // iOS에서는 다운로드 대신 새 창에서 이미지 열기
+          window.open(url);
+        } else {
+          link.click();
+        }
+
+        // URL 해제
+        URL.revokeObjectURL(url);
+      });
     });
+
     setTimeout(() => {
       toggleOpenCapture();
     }, 1000);
