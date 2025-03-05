@@ -59,9 +59,9 @@ const MypageDetail = () => {
             <p>붕어빵 개수</p>
             <p>{logs?.data?.data?.bungCount}개</p>
           </div>
-          <div className="flex justify-between items-center font-light">
-            <p>붕어빵 특징</p>
-            <div className="flex gap-2">
+          <div className="flex justify-between font-light">
+            <p className="shrink-0 mr-5">붕어빵 특징</p>
+            <div className="flex flex-wrap justify-end gap-2">
               {logs?.data?.data?.tags?.map((tag: string) => (
                 <p key={tag}># {tag}</p>
               ))}
