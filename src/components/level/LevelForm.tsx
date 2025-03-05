@@ -7,6 +7,8 @@ import BungTypeSelector from '@/components/common/BungTypeSelector';
 import { Button } from '../ui/button';
 import { useCreateLevel } from '@/api/level/create';
 import { useState } from 'react';
+import { Input } from '../ui/input';
+import { Badge } from '../ui/badge';
 
 interface LevelData {
   bungCount: number;
@@ -20,6 +22,7 @@ export function LevelForm() {
     bungName: '팥',
     tags: [],
   });
+  const [tagInput, setTagInput] = useState('');
 
   const { files, isLoading, fileInputRef, handleImageChange, removeImage } =
     useImageUpload({ multiple: true });
@@ -39,6 +42,26 @@ export function LevelForm() {
       tags: levelData.tags,
       files: files,
     });
+  };
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && tagInput.trim() !== '') {
+      e.preventDefault();
+      if (!levelData.tags.includes(tagInput.trim())) {
+        setLevelData((prev) => ({
+          ...prev,
+          tags: [...prev.tags, tagInput.trim()],
+        }));
+      }
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (tag: string) => {
+    setLevelData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((t) => t !== tag),
+    }));
   };
 
   return (
@@ -70,18 +93,30 @@ export function LevelForm() {
             setLevelData((prev) => ({ ...prev, bungName: value }))
           }
         />
-        <LabeledInfoField
-          label="붕어빵 특징"
-          isEditable
-          value={levelData.tags.join(', ')}
-          onChange={(value) =>
-            setLevelData((prev) => ({
-              ...prev,
-              tags: typeof value === 'string' ? value.split(', ') : [],
-            }))
-          }
-          placeholder={'# 직접 입력하기'}
-        />
+        <div className="flex px-8 h-[70px] border-[1px] border-[#d6d6d6] rounded-lg items-center justify-between w-full">
+          <label className="shrink-0 mr-4">붕어빵 특징</label>
+          <Input
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={handleTagKeyDown}
+            placeholder="# 태그 입력 후 Enter"
+            className="text-right bg-white"
+          />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {levelData.tags.map((tag) => (
+            <Badge key={tag} variant="secondary" className="py-1 font-normal">
+              {tag}
+              <button
+                type="button"
+                className="ml-1 text-xs"
+                onClick={() => removeTag(tag)}
+              >
+                ✕
+              </button>
+            </Badge>
+          ))}
+        </div>
 
         <Button
           type="submit"
