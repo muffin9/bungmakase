@@ -51,7 +51,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         setMyMarker(myLocation.latitude, myLocation.longitude);
 
         const newMarkers = [] as any;
-        const bungMarkerSize = new window.kakao.maps.Size(34, 34);
+        const bungMarkerSize = new window.kakao.maps.Size(34, 24);
         const bungMarkerImage = new window.kakao.maps.MarkerImage(
           '/images/bung_marker.png',
           bungMarkerSize,
