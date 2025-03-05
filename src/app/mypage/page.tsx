@@ -69,7 +69,7 @@ const MyPage = () => {
         나의 붕어빵 기록
       </div>
 
-      <div className="grid grid-cols-3 gap-[10px] w-full px-5">
+      <div className="grid grid-cols-3 gap-[10px] w-full px-5 pb-[80px]">
         {logsList?.data?.data?.map((log: UserLogsListType) => (
           <div
             key={log.logId}
