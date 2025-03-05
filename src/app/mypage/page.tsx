@@ -27,7 +27,7 @@ const MyPage = () => {
   return (
     <div className="bg-yellow-gradient h-screen pt-[100px] flex flex-col items-center">
       {profile?.data?.data?.imageUrl ? (
-        <div className="w-[89px] h-[89px] relative rounded-full bg-[#F6EEDF] flex justify-center items-center cursor-pointer mb-6">
+        <div className="w-[89px] h-[89px] min-h-[89px] relative rounded-full bg-[#F6EEDF] flex justify-center items-center cursor-pointer mb-6">
           <Image
             src={profile?.data?.data?.imageUrl}
             alt="profile"

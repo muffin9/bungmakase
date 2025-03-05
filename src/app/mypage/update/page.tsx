@@ -79,7 +79,7 @@ const MypageUpdate = () => {
   };
 
   return (
-    <div className="bg-yellow-gradient h-screen relative py-8">
+    <div className="bg-yellow-gradient relative py-8">
       <div className="w-full relative mb-2 ml-5">
         <BackButton />
       </div>
@@ -156,11 +156,11 @@ const MypageUpdate = () => {
             닉네임은 한글과 영문 소문자 12자 이내로 입력해주세요
           </div>
         </div>
-      </div>
-      <div className="absolute bottom-20 flex w-full gap-3 px-5 xs:w-[375px]">
-        <Button disabled={!isDuplicate} onClick={onClickUpdateBtn}>
-          완료
-        </Button>
+        <div className="w-full gap-3 px-5 mt-5 mb-14">
+          <Button disabled={!isDuplicate} onClick={onClickUpdateBtn}>
+            완료
+          </Button>
+        </div>
       </div>
     </div>
   );
