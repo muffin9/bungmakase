@@ -16,19 +16,19 @@ const formSchema = z.object({
   shopName: z.string().min(1, '이름을 입력해주세요'),
   phone: z
     .string()
-    .min(1, '전화번호를 입력해주세요')
     .regex(
       /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/,
       '올바른 전화번호 형식이 아닙니다',
-    ),
+    )
+    .optional(),
   startTime: z
     .string()
-    .min(1, '시간을 입력해주세요')
-    .regex(/^[0-9]{2}:[0-9]{2}$/, '올바른 형식이 아닙니다'),
+    .regex(/^[0-9]{2}:[0-9]{2}$/, '올바른 형식이 아닙니다')
+    .optional(),
   endTime: z
     .string()
-    .min(1, '시간을 입력해주세요')
-    .regex(/^[0-9]{2}:[0-9]{2}$/, '올바른 형식이 아닙니다'),
+    .regex(/^[0-9]{2}:[0-9]{2}$/, '올바른 형식이 아닙니다')
+    .optional(),
 });
 
 export type FormData = z.infer<typeof formSchema>;
@@ -128,9 +128,9 @@ function CreateForm() {
       address: location.currentAddress,
       latitude: location.latitude,
       longitude: location.longitude,
-      phone: data.phone,
-      startTime: data.startTime,
-      endTime: data.endTime,
+      phone: data.phone || '',
+      startTime: data.startTime || '',
+      endTime: data.endTime || '',
       tastes: [shopInfo.bungType],
       file: files[0],
     });
