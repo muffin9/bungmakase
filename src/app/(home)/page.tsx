@@ -99,7 +99,7 @@ const HomePage = () => {
           return (
             <div
               key={dogam.bungId}
-              className={`rounded-[10px] flex items-center justify-center flex-col aspect-square ${
+              className={`rounded-[10px] flex items-center justify-center flex-col w-[76px] h-[76px] ${
                 isMatched ? 'bg-secondary cursor-pointer' : 'bg-[#FFF5DF]'
               }`}
               onClick={
@@ -108,14 +108,16 @@ const HomePage = () => {
                   : undefined
               }
             >
-              <p className="font-medium text-[12px]">{dogam.bungName} 붕어빵</p>
+              <p className="font-medium text-[12px] mb-2">
+                {dogam.bungName} 붕어빵
+              </p>
               <Logo size="small" type={isMatched ? 'default' : 'empty'} />
             </div>
           );
         })}
       </div>
       <button
-        className="bg-[#FFEED0] text-primary px-[16px] py-[12px] flex items-center justify-center rounded-[999px] absolute bottom-20 right-5"
+        className="bg-[#FFEED0] text-primary px-[16px] h-[48px] flex items-center justify-center rounded-[999px] absolute bottom-20 right-5"
         onClick={onClickCaptureBtn}
       >
         <p>내 도감 캡쳐하기</p>
