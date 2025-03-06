@@ -95,7 +95,7 @@ const MypageUpdate = () => {
             onClick={() => fileInputRef.current?.click()}
           >
             {files[0] ? (
-              <div className="w-[89px] h-[89px] relative rounded-full bg-[#F6EEDF] flex justify-center items-center cursor-pointer mb-6">
+              <div className="w-full h-full relative rounded-full bg-[#F6EEDF] flex justify-center items-center cursor-pointer">
                 <Image
                   src={
                     files[0]
@@ -103,8 +103,8 @@ const MypageUpdate = () => {
                       : '/images/logo.png'
                   }
                   alt="profile"
-                  width={89}
-                  height={89}
+                  fill
+                  objectFit="cover"
                   className="rounded-full"
                 />
               </div>
