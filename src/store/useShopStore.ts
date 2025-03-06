@@ -20,8 +20,8 @@ interface ShopStore {
 const initialShopInfo: ShopInfo = {
   name: '',
   phone: '',
-  startTime: '',
-  endTime: '',
+  startTime: '09:00',
+  endTime: '18:00',
   file: [],
   bungType: '팥',
 };
