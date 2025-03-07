@@ -22,12 +22,21 @@ declare global {
 const KakaoMap = ({ children }: KakaoMapProps) => {
   const mapRef = useRef<HTMLElement | null | any>(null);
   const markerRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
 
   const { location } = useCurrentAddress();
   const { myLocation } = useGeolocation();
   const { setResultShopSearchInfo } = useSearchShopStore();
 
   const { data: markers } = useGetMarkers();
+
+  const clearMarkers = () => {
+    if (markerRef.current) {
+      markerRef.current.setMap(null);
+    }
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+  };
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -43,6 +52,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
             location.longitude || myLocation.longitude,
           ),
           level: 3,
+          minLevel: 1,
         };
 
         const map = new window.kakao.maps.Map(container, options);
@@ -53,11 +63,13 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         const newMarkers = [] as any;
         const bungMarkerSize = new window.kakao.maps.Size(34, 24);
         const bungMarkerImage = new window.kakao.maps.MarkerImage(
-          '/images/bung_marker.png',
+          '/images/svg/bung_marker.svg',
           bungMarkerSize,
         );
 
         if (window.kakao.maps && markers) {
+          clearMarkers();
+
           markers.forEach((markerData: SearchShopInfoType) => {
             const marker = new window.kakao.maps.Marker({
               map: map,
@@ -77,15 +89,13 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
           });
 
           newMarkers.forEach((marker: any) => marker.setMap(mapRef.current));
+          markersRef.current = newMarkers;
         }
       });
     };
 
     return () => {
-      if (markerRef.current) {
-        markerRef.current.setMap(null);
-        setResultShopSearchInfo([]);
-      }
+      clearMarkers();
     };
   }, [
     location.latitude,
