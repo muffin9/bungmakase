@@ -4,9 +4,14 @@ import { LabeledInfoField } from '@/components/common/LabeledInfoField';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
+import { useCreateSuggestLevel } from '@/api/level/create';
+import TagInput from '../common/TagInput';
+
 export function CreateDogamForm() {
   const [bungName, setBungName] = useState('');
-  const [tags, setTags] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+
+  const { mutate: createSuggestLevel } = useCreateSuggestLevel();
 
   return (
     <div className="h-full flex flex-col items-center justify-center">
@@ -18,20 +23,12 @@ export function CreateDogamForm() {
           placeholder={'직접 입력하기'}
           onChange={(value) => setBungName(value as string)}
         />
-        <LabeledInfoField
-          label="붕어빵 특징"
-          isEditable
-          value={tags}
-          placeholder={'# 직접 입력하기'}
-          onChange={(value) => setTags(value as string)}
-        />
+        <TagInput tags={tags} setTags={setTags} />
       </div>
       <Button
         className="mt-8"
-        onClick={() => {
-          // TODO: Create Dogam CALL API
-          // /level/suggest
-        }}
+        onClick={() => createSuggestLevel({ bungName, tags })}
+        disabled={bungName.trim() === '' || tags.length === 0}
       >
         등록하기
       </Button>

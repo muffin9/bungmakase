@@ -7,22 +7,13 @@ import BungTypeSelector from '@/components/common/BungTypeSelector';
 import { Button } from '../ui/button';
 import { useCreateLevel } from '@/api/level/create';
 import { useState } from 'react';
-import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
 
-interface LevelData {
-  bungCount: number;
-  bungName: string;
-  tags: string[];
-}
+import TagInput from '../common/TagInput';
 
 export function LevelForm() {
-  const [levelData, setLevelData] = useState<LevelData>({
-    bungCount: 1,
-    bungName: '팥',
-    tags: [],
-  });
-  const [tagInput, setTagInput] = useState('');
+  const [bungCount, setBungCount] = useState(1);
+  const [bungName, setBungName] = useState('팥');
+  const [tags, setTags] = useState<string[]>([]);
 
   const { files, isLoading, fileInputRef, handleImageChange, removeImage } =
     useImageUpload({ multiple: true });
@@ -30,38 +21,18 @@ export function LevelForm() {
   const { mutate: createLevel } = useCreateLevel();
 
   const isFormValid = () => {
-    return !!(levelData.bungCount > 0 && levelData.bungName);
+    return !!(bungCount > 0 && bungName);
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     createLevel({
-      bungCount: levelData.bungCount,
-      bungName: levelData.bungName,
-      tags: levelData.tags,
+      bungCount,
+      bungName,
+      tags,
       files: files,
     });
-  };
-
-  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && tagInput.trim() !== '') {
-      e.preventDefault();
-      if (!levelData.tags.includes(tagInput.trim())) {
-        setLevelData((prev) => ({
-          ...prev,
-          tags: [...prev.tags, tagInput.trim()],
-        }));
-      }
-      setTagInput('');
-    }
-  };
-
-  const removeTag = (tag: string) => {
-    setLevelData((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((t) => t !== tag),
-    }));
   };
 
   return (
@@ -78,45 +49,15 @@ export function LevelForm() {
           label="붕어빵 개수"
           isEditable
           type="number"
-          value={levelData.bungCount.toString()}
+          value={bungCount.toString()}
           placeholder={'직접 입력하기'}
-          onChange={(value) =>
-            setLevelData((prev) => ({
-              ...prev,
-              bungCount: typeof value === 'number' ? value : Number(value),
-            }))
-          }
+          onChange={(value) => setBungCount(Number(value))}
         />
         <BungTypeSelector
-          currentType={levelData.bungName}
-          onTypeChange={(value) =>
-            setLevelData((prev) => ({ ...prev, bungName: value }))
-          }
+          currentType={bungName}
+          onTypeChange={(value) => setBungName(value)}
         />
-        <div className="flex px-8 h-[70px] border-[1px] border-[#d6d6d6] rounded-lg items-center justify-between w-full">
-          <label className="shrink-0 mr-4">붕어빵 특징</label>
-          <Input
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
-            onKeyDown={handleTagKeyDown}
-            placeholder="# 태그 입력 후 Enter"
-            className="text-right bg-white"
-          />
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {levelData.tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="py-1 font-normal">
-              {tag}
-              <button
-                type="button"
-                className="ml-1 text-xs"
-                onClick={() => removeTag(tag)}
-              >
-                ✕
-              </button>
-            </Badge>
-          ))}
-        </div>
+        <TagInput tags={tags} setTags={setTags} />
 
         <Button
           type="submit"
