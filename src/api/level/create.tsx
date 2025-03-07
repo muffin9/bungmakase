@@ -10,6 +10,11 @@ interface CreateLevelData {
   files: File[];
 }
 
+interface CreateSuggestLevelData {
+  bungName: string;
+  tags: string[];
+}
+
 async function createLevel(data: CreateLevelData) {
   const formData = new FormData();
 
@@ -37,6 +42,14 @@ async function createLevel(data: CreateLevelData) {
   return response.data;
 }
 
+async function createSuggestLevel(data: CreateSuggestLevelData) {
+  const response = await auth.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/level/suggest`,
+    data,
+  );
+  return response.data;
+}
+
 export function useCreateLevel() {
   const { openModal } = useModalStore();
   const router = useRouter();
@@ -53,6 +66,28 @@ export function useCreateLevel() {
         });
         queryClient.invalidateQueries({ queryKey: ['dogams'] });
         router.push('/level');
+      } else if (data.code === 400) {
+        openModal({
+          title: '오류',
+          description: data.message,
+          type: 'error',
+        });
+      }
+    },
+  });
+}
+
+export function useCreateSuggestLevel() {
+  const { openModal } = useModalStore();
+  return useMutation({
+    mutationFn: createSuggestLevel,
+    onSuccess: (data) => {
+      if (data.code === 201) {
+        openModal({
+          title: '성공',
+          description: '새 붕어빵 기록을 추가했어요.',
+          type: 'success',
+        });
       } else if (data.code === 400) {
         openModal({
           title: '오류',

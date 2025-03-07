@@ -59,8 +59,7 @@ function BungTypeSelector({
         type="button"
         className="mb-2 bg-[#FFEED0] text-[#FFA914] hover:bg-[#FFEED0]/50 transition-colors w-full"
         onClick={() => {
-          alert('서비스 준비중입니다..');
-          // setIsModalOpen(true)
+          setIsModalOpen(true);
         }}
       >
         새 붕어빵 제안하기
@@ -69,7 +68,7 @@ function BungTypeSelector({
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
         titleElement={
-          <div className="flex flex-col text-center gap-2 pt-4">
+          <div className="flex flex-col text-center gap-2 pt-8">
             <h1 className="text-xl text-[#181818]">
               제안할 붕어빵의
               <br />
@@ -78,7 +77,7 @@ function BungTypeSelector({
           </div>
         }
       >
-        <div className="p-6">
+        <div className="p-4">
           <CreateDogamForm />
         </div>
       </Modal>
