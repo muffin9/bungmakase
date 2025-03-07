@@ -33,7 +33,7 @@ const ReviewsComponent = () => {
           <div key={review.reviewId} className="flex flex-col gap-2">
             <div className="flex gap-2">
               <Image
-                src={review.profileImageUrl || '/images/bung_marker.png'}
+                src={review.profileImageUrl || '/images/svg/bung_marker.svg'}
                 alt="profile image"
                 width={40}
                 height={40}
