@@ -22,12 +22,10 @@ export default function MapPage() {
             onClick={() => router.push('/map/search')}
           />
         </header>
-        <footer
-          className={`px-3 absolute right-0 bottom-[80px] z-${zIndex.mapFooter}`}
-        >
+        <footer className={`absolute right-3 bottom-20 z-${zIndex.mapFooter}`}>
           <FloatingActionButton />
         </footer>
-        <div className={`absolute bottom-0 z-${zIndex.bottomDrawer}`}>
+        <div className={`fixed bottom-0 z-${zIndex.bottomDrawer}`}>
           <ShopResultSection />
         </div>
       </KakaoMap>
