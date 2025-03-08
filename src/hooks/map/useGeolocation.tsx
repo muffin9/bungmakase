@@ -4,16 +4,16 @@ import { useEffect, useState } from 'react';
 
 function useGeolocation() {
   const [myLocation, setMyLocation] = useState(() => {
-    // localStorage에서 저장된 위치가 있는지 확인
     const savedLocation = storage.get('userLocation');
-    if (savedLocation) {
-      return JSON.parse(savedLocation);
-    }
-    return {
-      latitude: defaultCoords.lat,
-      longitude: defaultCoords.lng,
-    };
+    return savedLocation
+      ? JSON.parse(savedLocation)
+      : {
+          latitude: defaultCoords.lat,
+          longitude: defaultCoords.lng,
+        };
   });
+
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -21,49 +21,103 @@ function useGeolocation() {
       return;
     }
 
-    // 위치 정확도를 높이기 위한 옵션 추가
+    // 위치 정보 옵션 조정
     const options = {
-      enableHighAccuracy: true, // 높은 정확도 모드 활성화
-      maximumAge: 30000, // 30초 이내의 캐시된 위치만 사용
-      timeout: 27000, // 27초 이내에 응답이 없으면 타임아웃
+      enableHighAccuracy: false, // 배터리 소모와 정확도 트레이드오프
+      maximumAge: 300000, // 5분 이내의 캐시된 위치 허용
+      timeout: 10000, // 10초 타임아웃
     };
 
-    // 지속적인 위치 업데이트를 위한 watch 함수
-    const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        const newLocation = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          accuracy: position.coords.accuracy, // 정확도 정보 추가
-          timestamp: position.timestamp, // 타임스탬프 추가
-        };
+    let watchId: number;
 
-        // 정확도가 100m 이내일 때만 위치 업데이트
-        if (position.coords.accuracy <= 100) {
-          setMyLocation(newLocation);
-          storage.set('userLocation', JSON.stringify(newLocation));
-        }
-      },
-      (error) => {
-        console.error('Geolocation error:', error);
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            console.error('User denied the request for Geolocation.');
-            break;
-          case error.POSITION_UNAVAILABLE:
-            console.error('Location information is unavailable.');
-            break;
-          case error.TIMEOUT:
-            console.error('The request to get user location timed out.');
-            break;
-        }
-      },
-      options,
-    );
+    // 먼저 한 번 현재 위치 가져오기 시도
+    const getCurrentPositionPromise = new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, options);
+    });
+    getCurrentPositionPromise
+      .then((position) => {
+        handlePositionUpdate(position as GeolocationPosition);
+        // 성공적으로 위치를 가져온 후 watchPosition 시작
+        startWatchingPosition();
+      })
+      .catch((error) => {
+        console.warn('Initial position error:', error.message);
+        // 초기 위치 획득 실패 시에도 watchPosition 시작
+        startWatchingPosition();
+      });
 
-    // 컴포넌트 언마운트 시 위치 감시 중지
+    function startWatchingPosition() {
+      // 연속적인 위치 업데이트 시작
+      watchId = navigator.geolocation.watchPosition(
+        handlePositionUpdate,
+        handleError,
+        options,
+      );
+    }
+
+    function handlePositionUpdate(position: GeolocationPosition) {
+      const newLocation = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        timestamp: position.timestamp,
+      };
+
+      setIsError(false);
+      setMyLocation(newLocation);
+      storage.set('userLocation', JSON.stringify(newLocation));
+    }
+
+    function handleError(error: GeolocationPositionError) {
+      console.warn('Geolocation error:', error.message);
+      setIsError(true);
+
+      // 저장된 마지막 위치 사용
+      const savedLocation = storage.get('userLocation');
+      if (savedLocation) {
+        try {
+          const parsed = JSON.parse(savedLocation);
+          setMyLocation(parsed);
+          return;
+        } catch (e) {
+          console.error('Error parsing saved location:', e);
+        }
+      }
+
+      // 에러 메시지 표시
+      let errorMessage = '';
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage =
+            '위치 권한이 거부되었습니다. 설정에서 위치 권한을 허용해주세요.';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage =
+            '위치 정보를 사용할 수 없습니다. 잠시 후 다시 시도해주세요.';
+          break;
+        case error.TIMEOUT:
+          errorMessage = '위치 정보 요청 시간이 초과되었습니다.';
+          break;
+        default:
+          errorMessage = '위치 정보를 가져오는 중 오류가 발생했습니다.';
+      }
+
+      // 사용자에게 알림
+      if (!storage.get('userLocation')) {
+        alert(errorMessage);
+      }
+
+      // 기본 위치로 폴백
+      setMyLocation({
+        latitude: defaultCoords.lat,
+        longitude: defaultCoords.lng,
+      });
+    }
+
     return () => {
-      navigator.geolocation.clearWatch(watchId);
+      if (watchId) {
+        navigator.geolocation.clearWatch(watchId);
+      }
     };
   }, []);
 
@@ -94,7 +148,14 @@ function useGeolocation() {
     return Math.round(distance * 10) / 10;
   };
 
-  return { myLocation, setMyLocation, calculateDistance };
+  return {
+    myLocation,
+    setMyLocation,
+    isError,
+    calculateDistance: (lat: number, lng: number): number => {
+      return calculateDistance(lat, lng);
+    },
+  };
 }
 
 export default useGeolocation;

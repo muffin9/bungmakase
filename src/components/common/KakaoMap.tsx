@@ -146,8 +146,8 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
         onClickReBound={onClickReBound}
         position={{
           top: '',
-          right: 'left-[10px]',
-          bottom: 'bottom-[80px]',
+          right: 'left-3',
+          bottom: 'bottom-20',
           left: '',
         }}
       />
