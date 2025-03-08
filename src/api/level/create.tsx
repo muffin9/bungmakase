@@ -79,6 +79,7 @@ export function useCreateLevel() {
 
 export function useCreateSuggestLevel() {
   const { openModal } = useModalStore();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createSuggestLevel,
     onSuccess: (data) => {
@@ -88,6 +89,7 @@ export function useCreateSuggestLevel() {
           description: '새 붕어빵 기록을 추가했어요.',
           type: 'success',
         });
+        queryClient.invalidateQueries({ queryKey: ['dogams'] });
       } else if (data.code === 400) {
         openModal({
           title: '오류',

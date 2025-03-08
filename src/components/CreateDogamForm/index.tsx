@@ -7,11 +7,26 @@ import { useState } from 'react';
 import { useCreateSuggestLevel } from '@/api/level/create';
 import TagInput from '../common/TagInput';
 
-export function CreateDogamForm() {
+interface CreateDogamFormProps {
+  callBackFunc: () => void;
+}
+
+export function CreateDogamForm({ callBackFunc }: CreateDogamFormProps) {
   const [bungName, setBungName] = useState('');
   const [tags, setTags] = useState<string[]>([]);
 
   const { mutate: createSuggestLevel } = useCreateSuggestLevel();
+
+  const handleSubmit = () => {
+    if (bungName.length > 6) {
+      alert('붕어빵 이름은 6글자 이하로 입력해주세요.');
+      return;
+    }
+    createSuggestLevel({ bungName, tags });
+    setBungName('');
+    setTags([]);
+    callBackFunc();
+  };
 
   return (
     <div className="h-full flex flex-col items-center justify-center">
@@ -27,7 +42,7 @@ export function CreateDogamForm() {
       </div>
       <Button
         className="mt-8"
-        onClick={() => createSuggestLevel({ bungName, tags })}
+        onClick={handleSubmit}
         disabled={bungName.trim() === '' || tags.length === 0}
       >
         등록하기
