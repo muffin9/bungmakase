@@ -78,7 +78,7 @@ function BungTypeSelector({
         }
       >
         <div className="p-4">
-          <CreateDogamForm />
+          <CreateDogamForm callBackFunc={() => setIsModalOpen(false)} />
         </div>
       </Modal>
       <div className="flex gap-2">

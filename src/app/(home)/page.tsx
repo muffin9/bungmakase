@@ -108,8 +108,9 @@ const HomePage = () => {
                   : undefined
               }
             >
-              <p className="font-medium text-[12px] mb-2">
-                {dogam.bungName} 붕어빵
+              <p className="font-medium text-[12px] my-1 text-center">
+                {dogam.bungName} <br />
+                붕어빵
               </p>
               <Logo size="small" type={isMatched ? 'default' : 'empty'} />
             </div>
