@@ -11,7 +11,9 @@ import { useRouter } from 'next/navigation';
 
 export function ShopResultSection() {
   const router = useRouter();
-  const { resultShopSearchInfo } = useSearchShopStore();
+
+  const { resultShopSearchInfo, setResultShopSearchInfo } =
+    useSearchShopStore();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -20,10 +22,17 @@ export function ShopResultSection() {
     }
   }, [resultShopSearchInfo]);
 
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      setResultShopSearchInfo([]);
+    }
+  };
+
   return (
     <BottomDrawer
       open={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={handleOpenChange}
       className={`w-full overflow-y-scroll bg-white`}
     >
       <div>

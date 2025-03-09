@@ -31,9 +31,6 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
   const { data: markers } = useGetMarkers();
 
   const clearMarkers = () => {
-    if (markerRef.current) {
-      markerRef.current.setMap(null);
-    }
     markersRef.current.forEach((marker) => marker.setMap(null));
     markersRef.current = [];
   };
@@ -103,7 +100,6 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
     myLocation.latitude,
     myLocation.longitude,
     markers,
-    setResultShopSearchInfo,
   ]);
 
   const setMyMarker = (latitude: number, longitude: number) => {
