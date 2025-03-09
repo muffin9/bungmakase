@@ -23,12 +23,8 @@ export default function KakaoCallback() {
 
         if (response.data.data) {
           const token = response.data.data.token;
-          await new Promise<void>((resolve) => {
-            setEncryptedAccessToken(token);
-            // 브라우저가 쿠키를 처리할 시간을 주기 위해 짧은 지연 추가
-            setTimeout(resolve, 100);
-            router.push('/');
-          });
+          setEncryptedAccessToken(token);
+          router.push('/');
         }
       } catch (error) {
         console.error('Login error:', error);
