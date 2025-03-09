@@ -21,7 +21,9 @@ export const shouldRedirectToHome = (
   pathname: string,
   accessToken: string | null,
 ): boolean => {
-  return publicOnlyRoutes.includes(pathname) && !!accessToken;
+  return (
+    publicOnlyRoutes.includes(pathname) && !!accessToken && pathname !== '/'
+  );
 };
 
 export const shouldRedirectToLogin = (
