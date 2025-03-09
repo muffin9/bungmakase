@@ -18,7 +18,14 @@ export const getMarkers = async () => {
 export function useGetMarkers() {
   return useQuery({
     queryKey: ['markers'],
-    queryFn: getMarkers,
+    queryFn: async () => {
+      try {
+        return await getMarkers();
+      } catch (error) {
+        console.error('마커 조회 오류:', error);
+        throw error;
+      }
+    },
   });
 }
 
