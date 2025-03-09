@@ -22,7 +22,9 @@ export default function MapPage() {
             onClick={() => router.push('/map/search')}
           />
         </header>
-        <footer className={`absolute right-3 bottom-20 z-${zIndex.mapFooter}`}>
+        <footer
+          className={`absolute right-3 bottom-[calc(20px+env(safe-area-inset-bottom))] z-${zIndex.mapFooter}`}
+        >
           <FloatingActionButton />
         </footer>
         <div className={`fixed bottom-0 z-${zIndex.bottomDrawer}`}>
