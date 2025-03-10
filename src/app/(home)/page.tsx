@@ -10,6 +10,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { useRouter } from 'next/navigation';
+import { getCookie } from 'cookies-next/client';
 
 const HomePage = () => {
   const router = useRouter();
@@ -78,6 +79,12 @@ const HomePage = () => {
       router.push('/onboarding');
     }
   }, [isOnboarding]);
+
+  useEffect(() => {
+    const token = getCookie('token');
+    // TODO: backEnd user check token api
+    if (token) router.push('/');
+  }, []);
 
   if (!dogams?.data) return;
 

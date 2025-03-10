@@ -34,6 +34,8 @@ async function checkEmailLogin(email: string, password: string) {
     const token = response.data.data.token;
     setEncryptedAccessToken(token);
   }
+
+  return response.data;
 }
 
 interface UseEmailCheckProps {
@@ -80,21 +82,22 @@ export function useEmailLogin() {
   return useMutation({
     mutationFn: (data: { email: string; password: string }) =>
       checkEmailLogin(data.email, data.password),
-    onSuccess: () => {
-      openModal({
-        title: '로그인 성공',
-        description: '로그인에 성공했습니다.',
-        type: 'success',
-      });
-      router.push('/');
+    onSuccess: (data) => {
+      if (data.code === 200) {
+        openModal({
+          title: '로그인 성공',
+          description: '로그인에 성공했습니다.',
+          type: 'success',
+        });
+        router.push('/');
+      }
     },
     onError: () => {
       openModal({
         title: '로그인 실패',
-        description: '로그인 중 오류가 발생했습니다.',
+        description: '이메일 또는 비밀번호 확인',
         type: 'error',
       });
-      console.error('로그인 중 오류가 발생했습니다.');
     },
   });
 }
