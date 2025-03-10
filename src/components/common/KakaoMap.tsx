@@ -135,7 +135,7 @@ const KakaoMap = ({ children }: KakaoMapProps) => {
   };
 
   return (
-    <div id="static_map" className="w-full h-screen relative">
+    <div id="static_map" className="fixed top-0 w-[375px] h-full">
       {children}
       {/* TODO: ReBoundButton position 조정 필요*/}
       <ReBoundButton
