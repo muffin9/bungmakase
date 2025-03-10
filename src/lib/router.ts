@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import { protectedRoutes, publicOnlyRoutes } from '@/constants/route';
 
 export const shouldShowNavigation = (pathname: string): boolean => {
@@ -15,6 +16,14 @@ export const shouldShowNavigation = (pathname: string): boolean => {
   return !hidePatterns.some(
     (pattern) => pathname === pattern || pathname.startsWith(`${pattern}/`),
   );
+};
+
+export const decryptAccessTokenInMiddleware = (
+  hash?: string,
+): string | null => {
+  if (!hash) return null;
+  const bytes = CryptoJS.AES.decrypt(hash, process.env.NEXT_PUBLIC_SECRET_KEY!);
+  return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 };
 
 export const shouldRedirectToHome = (

@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { shouldRedirectToHome, shouldRedirectToLogin } from './lib/router';
+import {
+  decryptAccessTokenInMiddleware,
+  shouldRedirectToHome,
+  shouldRedirectToLogin,
+} from './lib/router';
 
 export function middleware(request: NextRequest) {
-  const accessToken = request.cookies.get('token')?.value as string;
+  const accessToken = decryptAccessTokenInMiddleware(
+    request.cookies.get('token')?.value,
+  );
   const pathname = request.nextUrl.pathname;
 
   if (shouldRedirectToHome(pathname, accessToken)) {
@@ -18,5 +24,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
