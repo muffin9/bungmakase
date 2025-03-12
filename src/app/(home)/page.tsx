@@ -97,35 +97,37 @@ const HomePage = () => {
         발견한 붕어빵 : {dogamsUser?.data?.data?.length}개
       </p>
 
-      <div className="grid grid-cols-4 gap-[10px] px-5">
-        {dogams?.data?.data.map((dogam: Dogam) => {
-          const isMatched = dogamsUser?.data?.data?.some(
-            (item: Dogam) => item.bungId === dogam.bungId,
-          );
+      <div className="pb-[100px] px-4">
+        <div className="grid grid-cols-4 gap-[10px]">
+          {dogams?.data?.data.map((dogam: Dogam) => {
+            const isMatched = dogamsUser?.data?.data?.some(
+              (item: Dogam) => item.bungId === dogam.bungId,
+            );
 
-          return (
-            <div
-              key={dogam.bungId}
-              className={`rounded-[10px] flex items-center justify-center flex-col w-[76px] h-[76px] ${
-                isMatched ? 'bg-secondary cursor-pointer' : 'bg-[#FFF5DF]'
-              }`}
-              onClick={
-                isMatched
-                  ? () => onClickDetail(Number(dogam.bungId))
-                  : undefined
-              }
-            >
-              <p className="font-medium text-[12px] my-1 text-center">
-                {dogam.bungName} <br />
-                붕어빵
-              </p>
-              <Logo size="small" type={isMatched ? 'default' : 'empty'} />
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={dogam.bungId}
+                className={`rounded-[10px] flex items-center justify-center flex-col w-[76px] h-[76px] ${
+                  isMatched ? 'bg-secondary cursor-pointer' : 'bg-[#FFF5DF]'
+                }`}
+                onClick={
+                  isMatched
+                    ? () => onClickDetail(Number(dogam.bungId))
+                    : undefined
+                }
+              >
+                <p className="font-medium text-[12px] my-1 text-center">
+                  {dogam.bungName} <br />
+                  붕어빵
+                </p>
+                <Logo size="small" type={isMatched ? 'default' : 'empty'} />
+              </div>
+            );
+          })}
+        </div>
       </div>
       <button
-        className="bg-[#FFEED0] text-primary px-[16px] h-[48px] flex items-center justify-center rounded-[999px] absolute bottom-20 right-5"
+        className="bg-[#FFEED0] text-primary px-4 h-12 flex items-center justify-center rounded-[999px] sticky bottom-20"
         onClick={onClickCaptureBtn}
       >
         <p>내 도감 캡쳐하기</p>

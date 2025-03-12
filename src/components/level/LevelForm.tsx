@@ -44,7 +44,7 @@ export function LevelForm() {
         onImageChange={handleImageChange}
         onRemove={removeImage}
       />
-      <div className="flex flex-col gap-2">
+      <div className="h-screen flex flex-col gap-2">
         <LabeledInfoField
           label="붕어빵 개수"
           isEditable
